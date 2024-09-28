@@ -1,8 +1,15 @@
 ---
+title: "Untitled"
+author: "Yanzun Jiang"
+format: pdf
+editor: visual
+---
+
+---
 title: "TBD"
 author: "Yanzun Jiang, Siyuan Lu, Yi Tang"
 date: today
-output: pdf_document
+output: bookdown::pdf_document2
 ---
 
 ```{r}
@@ -42,47 +49,19 @@ ggplot(penguins, aes(x = island, fill = species)) +
 
 Talk more about it.
 
-And also planes (@ref(fig-planes)). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+And also planes (Figure \@ref(fig:planes)). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
 
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
+```{r planes, fig.cap = "Relationship between wing length and width"}
 #| echo: false
 #| warning: false
 #| message: false
 
-
+plot(1:10)
 ```
 
 Talk way more about it. 
 
-
 # Results
-
-Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-library(rstanarm)
-```
-
-# Discussion
-
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
 
 \newpage
 
