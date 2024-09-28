@@ -1,9 +1,9 @@
 ---
-title: "TBD"
+title: "Housing in Ames"
 author: "Yanzun Jiang, Siyuan Lu, Yi Tang"
 date: today
 date-format: long
-thanks: "Code and data supporting this proposal is available at: <https://github.com/Stary54264/STA302-Group-Project>"
+thanks: "Code and data supporting this proposal is available at: <https://github.com/Stary54264/Housing-in-Ames>"
 format: pdf
 number-sections: true
 toc: true
