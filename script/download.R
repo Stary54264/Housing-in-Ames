@@ -15,5 +15,6 @@ library(AmesHousing)
 # Get data from package
 data <- ames_raw
 
+
 #### Save raw data ####
 write_csv(data, "data/raw_data.csv")
