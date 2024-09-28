@@ -1,15 +1,13 @@
 ---
-title: "Untitled"
-author: "Yanzun Jiang"
-format: pdf
-editor: visual
----
-
----
 title: "TBD"
 author: "Yanzun Jiang, Siyuan Lu, Yi Tang"
 date: today
-output: bookdown::pdf_document2
+date-format: long
+thanks: "Code and data supporting this proposal is available at: <https://github.com/Stary54264/STA302-Group-Project>"
+format: pdf
+number-sections: true
+toc: true
+bibliography: references.bib
 ---
 
 ```{r}
