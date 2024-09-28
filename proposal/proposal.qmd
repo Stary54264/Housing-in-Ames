@@ -19,6 +19,8 @@ library(tidyverse)
 library(bookdown)
 ```
 
+\newpage
+
 # Contributions
 
 Yanzun Jiang: Organized discussions and meetings; set up Github workspace for collaborating; downloaded data for setting up the linear regression model from #where#; cleaned data to make further analysis easier
