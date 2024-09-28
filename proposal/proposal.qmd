@@ -21,14 +21,6 @@ library(bookdown)
 
 \newpage
 
-# Contributions
-
-Yanzun Jiang: Organized discussions and meetings; set up Github workspace for collaborating; downloaded data for setting up the linear regression model from #where#; cleaned data to make further analysis easier
-
-Siyuan Lu: 
-
-Yi Tang: 
-
 # Introduction
 
 @citeR
@@ -38,6 +30,20 @@ Yi Tang:
 # Ethics Discussion
 
 # Preliminary Results
+
+\newpage
+
+\appendix
+
+# Appendix
+
+## Contributions
+
+Yanzun Jiang: Organized discussions and meetings; set up Github workspace for collaborating; downloaded data for setting up the linear regression model from #where#; cleaned data to make further analysis easier
+
+Siyuan Lu: 
+
+Yi Tang: 
 
 \newpage
 
