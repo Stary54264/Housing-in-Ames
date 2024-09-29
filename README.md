@@ -15,7 +15,7 @@ The repo is structured as:
 -   `script` contains the R scripts used to download and clean data.
 
 
-## Criteria
+## Criteria for Part 1
 
 Proposed research question
 -   [ ] The response variable of interest is clearly identifiable, and the predictors hypothesized to be related to the response are explicitly stated (or at minimum groups of common predictor characteristics are listed).
