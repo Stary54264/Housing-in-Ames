@@ -17,6 +17,7 @@ bibliography: references.bib
 
 library(tidyverse)
 library(AmesHousing)
+library(ggplot2)
 ```
 
 \newpage
@@ -31,6 +32,33 @@ library(AmesHousing)
 
 # Preliminary Results
 
+```{r}
+# Read data from cleaned data file
+cleaned_data <- read_csv(here::here("data", "cleaned_data.csv"))
+
+# Convert variables to factors
+
+cleaned_data$central_air <- as.factor(cleaned_data$central_air)
+cleaned_data$roof_style <- as.factor(cleaned_data$roof_style)
+
+# Fit the linear model
+model <- lm(sale_price ~ lot_area + overall_qual + year_built + roof_style + 
+            mas_vnr_area + total_bsmt_sf + central_air + garage_area + misc_val, data = cleaned_data)
+
+# Residual Plot
+ggplot(cleaned_data, aes(x = fitted(model), y = resid(model))) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  ggtitle("Residual Plot")
+
+# QQ plot
+qqnorm(resid(model))
+qqline(resid(model), col = "red")
+
+```
+
 \newpage
 
 \appendix
@@ -43,7 +71,7 @@ Yanzun Jiang: Organized discussions and meetings; set up Github workspace for co
 
 Siyuan Lu: 
 
-Yi Tang: 
+Yi Tang: Build a linear regression model to predict house sale prices by using five key predictors in cleaned data. It assisted to understand the relationship between variables and ensure data meets key assumptions for statistical validity.
 
 \newpage
 
