@@ -40,7 +40,7 @@ Description of data source
 Predictor variable summaries
 -   [ ] An appropriate and suitably presentable numerical or graphical summary is used to statistically describe the chosen predictor variables.
 -   [ ] Important/interesting variable characteristics (e.g. skews, abnormal values) or lack thereof are, in the context of what is being measured/the research question.
--   [ ] A justification for why the chosen predictor variables are relevant to answering the research question, making explicit reference to the summarized literature and to any modifications to variables that have been made.
+-   [X] A justification for why the chosen predictor variables are relevant to answering the research question, making explicit reference to the summarized literature and to any modifications to variables that have been made.
 
 Residual analysis of preliminary model
 -   [ ] All plots needed for a complete residual analysis have been presented, are correct, and are easily readable with appropriate axes and labels.
