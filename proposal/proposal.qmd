@@ -70,7 +70,7 @@ data2 <- data |> select(
 #| warning: false
 #| message: false
 
-# Visualize part of the dataset
+# Visualize the first part of the dataset
 kable(head(data1), format = "markdown")
 ```
 
@@ -81,7 +81,7 @@ kable(head(data1), format = "markdown")
 #| warning: false
 #| message: false
 
-# Visualize part of the dataset
+# Visualize the second part of the dataset
 kable(head(data2), format = "markdown")
 ```
 
@@ -130,6 +130,7 @@ data_numerical <- data |>
 #| warning: false
 #| message: false
 
+# Generate a summarize table
 summary_table <- data.frame(
   Mean = round(apply(data_numerical, 2, mean), 2),
   Standard_Deviation = round(apply(data_numerical, 2, sd), 2),

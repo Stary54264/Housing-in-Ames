@@ -1,0 +1,48 @@
+---
+title: "code"
+author: "Yanzun Jiang, Yi Tang"
+date: "30 September 2024"
+output: pdf_document
+---
+
+```{r}
+# Workspace setup
+library(tidyverse)
+library(AmesHousing)
+```
+
+```{r}
+# Download data
+data <- ames_raw
+```
+
+```{r}
+# Basic cleaning of the data
+cleaned_data <-
+  raw_data |>
+  janitor::clean_names() |>
+  select(sale_price, lot_area, overall_qual, year_built, roof_style,
+         mas_vnr_area, total_bsmt_sf, central_air, garage_area, misc_val) |>
+  filter_all(all_vars(!is.na(.)))
+```
+
+```{r}
+# Generate a dataset that only consists numerical data
+data_numerical <- data |>
+  select(sale_price, lot_area, overall_qual, year_built,
+         mas_vnr_area, total_bsmt_sf, garage_area, misc_val
+  )
+
+# Generate a summarize table
+summary_table <- data.frame(
+  Mean = round(apply(data_numerical, 2, mean), 2),
+  Standard_Deviation = round(apply(data_numerical, 2, sd), 2),
+  Median = round(apply(data_numerical, 2, median), 2)
+)
+
+kable(summary_table, format = "markdown")
+```
+
+```{r}
+
+```
