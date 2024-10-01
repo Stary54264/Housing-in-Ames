@@ -103,7 +103,6 @@ These predictor variables all shows the quality of the house, which will affect 
 #| message: false
 
 # Generate a dataset that only consists numerical data
-
 data_numerical <- data |>
   select(sale_price, lot_area, overall_qual, year_built,
          mas_vnr_area, total_bsmt_sf, garage_area, misc_val
@@ -126,7 +125,7 @@ summary_table <- data.frame(
 kable(summary_table, format = "markdown")
 ```
 
-From the summary table (@tbl-summary), we can easily see that `mas_vnr_area`	and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
+From the summary table (@tbl-summary), we can easily see that `mas_vnr_area` and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
 
 # Ethics Discussion {#sec-ethics}
 
