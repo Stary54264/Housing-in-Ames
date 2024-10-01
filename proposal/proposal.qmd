@@ -125,7 +125,7 @@ qqline(resid(model), col = "red")
 
 Yanzun Jiang: Organized discussions and meetings; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
 
-Siyuan Lu: 
+Siyuan Lu: Introduce the paper. Set primary research question and hypothesis. Gather peer-review articles and relate them back to our paper. Check data ethics.
 
 Yi Tang: Built linear regression model to predict house sale prices by using five key predictors in cleaned data. It assisted to understand the relationship between variables and ensure data meets key assumptions for statistical validity.
 
