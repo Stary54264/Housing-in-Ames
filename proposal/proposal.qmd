@@ -23,19 +23,17 @@ library(knitr)
 
 # Introduction
 
-Understanding the relationships between variables that influence house prices can provide deeper insights for various stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisions. Accurate prediction of house prices helps to make informed decisions about buying, selling and investing in real estate. In addition, it helps to assess the economic health of an area and plan for future developments.
-
-The primary research question we aim to answer is: what are the key factors that significantly influence house prices in Ames from 2006 to 2010? Sale price of the house is the response variable. Predictor variables include lot size, overall quality, year of construction, roof style, masonry veneer area, total basement area, central air conditioning, garage size, and value of miscellaneous feature. The hypothesis we state is that there is a statistically significant linear relationship between certain property characteristics (predictors) and the sale price of houses (response). This hypothesis will be tested using linear regression, which would be appropriate in this case. We use residual plots and a Q-Q plot to check the assumption.
+The primary research question we aim to answer is: what are the key factors that significantly influence house prices in Ames from 2006 to 2010? Sale price of the house is the response variable. Predictor variables include area, overall quality index, year of construction, house facilities, and value of miscellaneous feature. The hypothesis we state is that there is a statistically significant linear relationship between certain property characteristics (predictors) and the sale price of houses (response). This hypothesis will be tested using linear regression, which would be appropriate in this case. We use residual plots and a Q-Q plot to check the assumption.
 
 Linear regression provides coefficients that quantify the relationship between each predictor and the response variable, making it easier to interpret the impact of each factor on house prices. Specifically, it will provide estimates of how much the sale price is expected to change with a one-unit change in each predictor variable, holding other variables constant. Our primary goal is to understand the impact of each predictor on house prices, so the focus should be on interpretability instead of precision or accuracy.
 
-We found several peer-reviewed articles that focus on similar problems with this paper. @influencing analyzed the influence factors for market supply and demand of commodity housing, and established price influence factors analysis model based on multiple linear regression. The article studies influencing factors of house price using the same method, linear regression, as we do, providing an example of setting a linear regression on factors and house price.
+We found several peer-reviewed articles that focus on similar problems with this paper. @influencing analyzed the influence factors for market supply and demand of commodity housing, and established price influence factors analysis model based on multiple linear regression. This article studies influencing factors of house price using linear regression as we do, providing an example how to set a linear regression on factors and house price.
 
-In @range, authors develop a novel fuzzy linear regression framework using symmetric and asymmetric trapezoidal fuzzy numbers for determining the relationship of particular (non-) policy factors with the house prices. The article shows the relationship between policy factors and house price, which demonstrates a different aspect of our research question.
+In @range, authors develop a novel fuzzy linear regression framework using symmetric and asymmetric trapezoidal fuzzy numbers for determining the relationship of particular (non-) policy factors with the house prices. This article shows the relationship between policy factors and house price, which demonstrates a different aspect of our research question.
 
-In the real estate industry, the price of property plays a crucial role in economic growth. The research @MLT attempts to predict the price of a house using MLTs. Here, the price of the property is predicted using Extreme Gradient (XG) boosting algorithm and hedonic regression pricing. Both XGBoost and hedonic pricing models use 13 variables as inputs to predict house prices. The article uses an alternative regression method to study the relationship between multiple factors and house price.
+The research @MLT attempts to predict the price of a house using Extreme Gradient (XG) boosting algorithm and hedonic regression pricing with 13 variables as inputs to predict house prices. This article uses an alternative regression method to study the relationship between multiple factors and house price.
 
-In @sec-data, we introduce the source and overview of our dataset. Variables used in regression is explained in detail. Then, in @sec-ethics, we talk about the data ethics. Finally, in @sec-results, we address the result of the regression model, plots that verifies the assumptions, and descriptions.
+In @sec-data, we introduce the source and overview of our dataset. Variables used in regression is explained in detail. Then, in @sec-ethics, we talk about the data ethics. In @sec-results, we address the result of the regression model, plots that verifies the assumptions, and descriptions. Finally, group contribution of each of our team menber is stated in @sec-contribution.
 
 # Data Description {#sec-data}
 
@@ -144,7 +142,7 @@ From the summary table (@tbl-summary), we can easily see that `mas_vnr_area` and
 
 # Ethics Discussion {#sec-ethics}
 
-Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to keep some key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data. Stakeholders of our analysis include homeowners, potential buyers, real estate agents, and policymakers.
+Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to only keep some necessary key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data. The cleaned data we are using includes some detailed information about housing characteristics, but does not contain personal identifiers. The analysis can provide deeper insights for stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisionsabout buying, selling and investing in real estate. The Ames housing dataset has gained popularity, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
 
 # Preliminary Results {#sec-results}
 
@@ -189,7 +187,7 @@ ggplot(residuals_df, aes(x = observation, y = residuals)) +
   theme_minimal()
 ```
 
-I plotted residuals against observation order to test uncorrelated errors. If errors are uncorrelated, residuals should scatter randomly around the horizontal axis without any clear pattern. From @fig-resid, we can see that residuals appear to be randomly distributed across observations, which satisfy the assumption of independence in the linear regression model. But there still have some larger residuals, we can regard these points as potential outliers.
+We plotted residuals against observation order to test uncorrelated errors. If errors are uncorrelated, residuals should scatter randomly around the horizontal axis without any clear pattern. From @fig-resid, we can see that residuals appear to be randomly distributed across observations, which satisfy the assumption of independence in the linear regression model. But there still have some larger residuals, we can regard these points as potential outliers.
 
 ```{r}
 #| label: fig-constant-variance
