@@ -77,25 +77,25 @@ The Ames Housing dataset (@tbl-data-1, @tbl-data-2) was sourced from the `AmesHo
 
 The dataset consists of 2930 observations and 82 variables relevant to understanding housing market dynamics. It was cleaned using `tidyverse` package (@tidyverse). After cleaning, we selected 1 response variable, `sale_price`, and 9 predictor variables: `lot_area`, `overall_qual`, `year_built`, `roof_style`, `mas_vnr_area`, `total_bsmt_sf`, `central_air`, `garage_area`, and `misc_val`.
 
-`sale_price`: Priceof the house in dollars
+- `sale_price`: Priceof the house in dollars
 
-`lot_area`: Lot size in square feet
+- `lot_area`: Lot size in square feet
 
-`overall_qual`: Rates the overall material and finish of the house
+- `overall_qual`: Rates the overall material and finish of the house
 
-`year_built`: Original construction date
+- `year_built`: Original construction date
 
-`roof_style`: Type of roof
+- `roof_style`: Type of roof
 
-`mas_vnr_area`: Masonry veneer area in square feet
+- `mas_vnr_area`: Masonry veneer area in square feet
 
-`total_bsmt_sf`: Total square feet of basement area
+- `total_bsmt_sf`: Total square feet of basement area
 
-`central_air`: Central air conditioning
+- `central_air`: Central air conditioning
 
-`garage_area`: Size of garage in square feet
+- `garage_area`: Size of garage in square feet
 
-`misc_val`: Value of miscellaneous feature in dollars
+- `misc_val`: Value of miscellaneous feature in dollars
 
 These predictor variables all shows the quality of the house, which will affect the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
 
@@ -228,11 +228,11 @@ In a well-behaved model that follows a normal distribution, the points in the Q-
 
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
 
-Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
+- Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
 
-Siyuan Lu: 
+- Siyuan Lu: 
 
-Yi Tang: Built linear regression model to predict house sale prices by using five key predictors in cleaned data. It assisted to understand the relationship between variables and ensure data meets key assumptions for statistical validity.
+- Yi Tang: Built linear regression model to predict house sale prices by using five key predictors in cleaned data. It assisted to understand the relationship between variables and ensure data meets key assumptions for statistical validity.
 
 \newpage
 
