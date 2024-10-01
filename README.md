@@ -33,14 +33,14 @@ Suitability of linear regression
 -   [ ] Provides a reasonable justification for whether the focus of the model will be on interpretability (description) or precision/accuracy (prediction).
 
 Description of data source
--   [ ] Where the data was sourced/downloaded from is explicitly mentioned with a corresponding citation in the bibliography.
--   [ ] The original usage or purpose of the dataset is described, and it is explicit how that usage differs from the current research proposal.
--   [ ] How the data were originally collected by the curator of the dataset is described and a corresponding reference is cited from the bibliography.
+-   [X] Where the data was sourced/downloaded from is explicitly mentioned with a corresponding citation in the bibliography.
+-   [X] The original usage or purpose of the dataset is described, and it is explicit how that usage differs from the current research proposal.
+-   [X] How the data were originally collected by the curator of the dataset is described and a corresponding reference is cited from the bibliography.
 
 Predictor variable summaries
--   [ ] An appropriate and suitably presentable numerical or graphical summary is used to statistically describe the chosen predictor variables.
--   [ ] Important/interesting variable characteristics (e.g. skews, abnormal values) or lack thereof are, in the context of what is being measured/the research question.
--   [ ] A justification for why the chosen predictor variables are relevant to answering the research question, making explicit reference to the summarized literature and to any modifications to variables that have been made.
+-   [X] An appropriate and suitably presentable numerical or graphical summary is used to statistically describe the chosen predictor variables.
+-   [X] Important/interesting variable characteristics (e.g. skews, abnormal values) or lack thereof are, in the context of what is being measured/the research question.
+-   [X] A justification for why the chosen predictor variables are relevant to answering the research question, making explicit reference to the summarized literature and to any modifications to variables that have been made.
 
 Residual analysis of preliminary model
 -   [ ] All plots needed for a complete residual analysis have been presented, are correct, and are easily readable with appropriate axes and labels.
