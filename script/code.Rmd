@@ -9,11 +9,12 @@ output: pdf_document
 # Workspace setup
 library(tidyverse)
 library(AmesHousing)
+library(knitr)
 ```
 
 ```{r}
 # Download data
-data <- ames_raw
+raw_data <- ames_raw
 ```
 
 ```{r}
@@ -28,7 +29,7 @@ cleaned_data <-
 
 ```{r}
 # Generate a dataset that only consists numerical data
-data_numerical <- data |>
+data_numerical <- cleaned_data |>
   select(sale_price, lot_area, overall_qual, year_built,
          mas_vnr_area, total_bsmt_sf, garage_area, misc_val
   )
