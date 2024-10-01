@@ -23,7 +23,16 @@ library(knitr)
 
 # Introduction
 
-@citeR
+Understanding the relationships between variables that influence house prices can provide deeper insights for various stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisions. Accurate prediction of house prices helps to make informed decisions about buying, selling and investing in real estate. In addition, it helps to assess the economic health of an area and plan for future developments. 
+
+The primary research question we aim to answer is: What are the key factors that significantly influence house prices in Ames from 2006 to 2010? Sale price of the house is the response variable. Predictor variables include lot size, overall quality, year of construction, roof style, masonry veneer area, total basement area, central air conditioning, garage size, and value of miscellaneous feature. The hypothesis we state is that there is a statistically significant positive relationship between certain property characteristics (predictors) and the sale price of houses (response). This hypothesis will be tested using linear regression which is appropriate when there is a linear relationship between the response variable and predictor variables. We use scatter plots and correlation coefficients to check the assumption. Linear regression provides coefficients that quantify the relationship between each predictor and the response variable, making it easier to interpret the impact of each factor on house prices. Specifically, It will provide estimates of how much the sale price is expected to change with a one-unit change in each predictor variable, holding other variables constant. Our primary goal is to understand the impact of each predictor on house prices, so the focus should be on interpretability instead of precision/accuracy. 
+
+@influencing analyzed the influence factors for market supply and demand of commodity housing, and established price influence factors analysis model based on multiple linear regression. The article studies influencing factors of house price using the same method, linear regression, as we do, providing an example of setting a linear regression on factors and house price.
+In @range, authors develop a novel fuzzy linear regression framework using symmetric and asymmetric trapezoidal fuzzy numbers for determining the relationship of particular (non-) policy factors with the house prices. The article shows the relationship between policy factors and house price, which demonstrates a different aspect of our research question.
+In the real estate industry, the price of property plays a crucial role in economic growth. The research @MLT attempts to predict the price of a house using MLTs. Here, the price of the property is predicted using Extreme Gradient (XG) boosting algorithm and hedonic regression pricing. Both XGBoost and hedonic pricing models use 13 variables as inputs to predict house prices. The article uses an alternative regression method to study the relationship between multiple factors and house price. 
+
+In @sec-data, we introduce the source and overview of our dataset. Variables used in regression is explained in detail. Then, in @sec-ethics we talk about the data ethics. In @sec-results, we address the preliminary result plots and descriptions.
+
 
 # Data Description {#sec-data}
 
@@ -53,11 +62,13 @@ The dataset consists of 2930 observations and 82 variables relevant to understan
 
 #TODO: explain variables
 
-These predictor variables all shows the quality of the house, which will affect the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
+These predictor variables all show the quality of the house, which will affect the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
 
 The variability in `lot_area` and the distribution of the `year_built` variable indicate interesting trends that warrant further exploration.# By analyzing these variables, this study aims to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
 
 # Ethics Discussion {#sec-ethics}
+
+Our data is collected from @amehousing, then we cleaned the data to keep some keey factors we want. Raw and processed versions of the data from De Cock published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data.Stakeholders of our analysis including homeowners, potential buyers, real estate agents, and policymakers. 
 
 # Preliminary Results {#sec-results}
 
