@@ -44,7 +44,7 @@ data <- read_csv(here::here("data", "cleaned_data.csv"))
 # Separate the dataset into two parts for better visualization
 data1 <- data |> select(
   sale_price, lot_area, overall_qual, year_built, roof_style
-  )
+)
 
 data2 <- data |> select(
   mas_vnr_area, total_bsmt_sf, central_air, garage_area, misc_val
@@ -99,9 +99,36 @@ The dataset consists of 2930 observations and 82 variables relevant to understan
 
 These predictor variables all shows the quality of the house, which will affect the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
 
-# TODO: summarize table or graph
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
 
-The variability in `lot_area` and the distribution of the `year_built` variable indicate interesting trends that warrant further exploration.# By analyzing these variables, this study aims to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
+# Generate a dataset that only consists numerical data
+
+data_numerical <- data |>
+  select(sale_price, lot_area, overall_qual, year_built,
+         mas_vnr_area, total_bsmt_sf, garage_area, misc_val
+  )
+```
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: Summarize Table of Numerical Data
+#| echo: false
+#| warning: false
+#| message: false
+
+summary_table <- data.frame(
+  Mean = round(apply(data_numerical, 2, mean), 2),
+  Standard_Deviation = round(apply(data_numerical, 2, sd), 2),
+  Median = round(apply(data_numerical, 2, median), 2)
+)
+
+kable(summary_table, format = "markdown")
+```
+
+From the summary table (@tbl-summary), we can easily see that `mas_vnr_area`	and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
 
 # Ethics Discussion {#sec-ethics}
 
@@ -120,7 +147,8 @@ data$roof_style <- as.factor(data$roof_style)
 model <- lm(sale_price ~
               lot_area + overall_qual + year_built + roof_style +
               mas_vnr_area + total_bsmt_sf + central_air + garage_area +
-              misc_val, data = data)
+              misc_val, data = data
+)
 ```
 
 ```{r}
@@ -160,7 +188,7 @@ qqline(resid(model), col = "red")
 
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
 
-Yanzun Jiang: Organized discussions and meetings; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
+Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
 
 Siyuan Lu: 
 
