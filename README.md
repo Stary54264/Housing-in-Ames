@@ -18,9 +18,9 @@ The repo is structured as:
 ## Criteria for Part 1
 
 Proposed research question
--   [ ] The response variable of interest is clearly identifiable, and the predictors hypothesized to be related to the response are explicitly stated (or at minimum groups of common predictor characteristics are listed).
--   [ ] It is phrased using clear language and familiar terminology and makes a clear hypothesis about the population relationship.
--   [ ] It is directly connected to the stated importance/relevance of the project topic.
+-   [X] The response variable of interest is clearly identifiable, and the predictors hypothesized to be related to the response are explicitly stated (or at minimum groups of common predictor characteristics are listed).
+-   [X] It is phrased using clear language and familiar terminology and makes a clear hypothesis about the population relationship.
+-   [X] It is directly connected to the stated importance/relevance of the project topic.
 
 Literature summary
 -   [ ] Three legitimate peer-reviewed articles are summarized.
@@ -53,7 +53,7 @@ Preliminary model discussion
 -   [ ] A comparison is made between the preliminary model results and those summarised from the literature, and it is discussed why these may be similar or different.
 
 Overall Proposal Formatting
--   [ ] The bibliography and in-text citations are formatted correctly using a consistent style.
+-   [X] The bibliography and in-text citations are formatted correctly using a consistent style.
 -   [ ] Word counts for each section are met or are no more than 15 words in excess.
 -   [ ] Headers and paragraphs are used effectively to increase readability and separate ideas for increased comprehension.
 -   [ ] No R code or R output (other than plots) are displayed in the written proposal.
