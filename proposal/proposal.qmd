@@ -23,6 +23,8 @@ library(knitr)
 
 # Introduction
 
+@citeR
+
 # Data Description {#sec-data}
 
 ```{r}
@@ -35,6 +37,10 @@ data <- read_csv(here::here("data", "cleaned_data.csv"))
 ```
 
 ```{r}
+<<<<<<< HEAD
+#| label: tbl-data
+#| tbl-cap: Preview of Data
+=======
 #| include: false
 #| warning: false
 #| message: false
@@ -52,11 +58,26 @@ data2 <- data |> select(
 ```{r}
 #| label: tbl-data-1
 #| tbl-cap: Preview of Data (First Half)
+>>>>>>> main
 #| echo: false
 #| warning: false
 #| message: false
 
 # Visualize part of the dataset
+<<<<<<< HEAD
+kable(head(data), format = "markdown")
+```
+
+The Ames Housing dataset (@tbl-data) was sourced from the `AmesHousing` package (@ameshousing) in R (@citeR). It was originally compiled by the Ames City Assessor's Office through a comprehensive data dump of property tax records from 2006 to 2010, and it aimed to document residential property sales (@ames). The dataset was initially designed for property tax assessments and general valuation, focusing on property characteristics such as lot area, the year built, and sale price. In contrast, this research aims to analyze how various property features influence house prices in Ames.
+
+The dataset consists of 2930 observations and 82 variables relevant to understanding housing market dynamics. It was cleaned using `tidyverse` package (@tidyverse). After cleaning, we selected 1 response variable, `sale_price`, and 9 predictor variables: `lot_area`, `overall_qual`, `year_built`, `roof_style`, `mas_vnr_area`, `total_bsmt_sf`, `central_air`, `garage_area`, and `misc_val`.
+
+#TODO: explain variables
+
+These predictor variables all shows the quality of the house, which will affect the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
+
+The variability in `lot_area` and the distribution of the `year_built` variable indicate interesting trends that warrant further exploration.# By analyzing these variables, this study aims to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
+=======
 kable(head(data1), format = "markdown")
 ```
 
@@ -126,6 +147,7 @@ kable(summary_table, format = "markdown")
 ```
 
 From the summary table (@tbl-summary), we can easily see that `mas_vnr_area` and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
+>>>>>>> main
 
 # Ethics Discussion {#sec-ethics}
 
@@ -144,6 +166,28 @@ data$roof_style <- as.factor(data$roof_style)
 model <- lm(sale_price ~
               lot_area + overall_qual + year_built + roof_style +
               mas_vnr_area + total_bsmt_sf + central_air + garage_area +
+<<<<<<< HEAD
+              misc_val, data = data)
+```
+
+
+```{r}
+#| label: fig-resid
+#| fig-cap: Uncorrelated errors testing
+#| echo: false
+#| warning: false
+#| message: false
+
+# value residuals
+
+residuals <- resid(model)
+
+# Create a data frame with residuals and observation order (index)
+residuals_df <- data.frame(residuals = residuals, observation = 1:length(residuals))
+
+# Plot residuals against observation index to check for uncorrelated errors
+ggplot(residuals_df, aes(x = observation, y = residuals)) +
+=======
               misc_val, data = data
 )
 ```
@@ -157,11 +201,49 @@ model <- lm(sale_price ~
 
 # Residual Plot
 ggplot(data, aes(x = fitted(model), y = resid(model))) +
+>>>>>>> main
   geom_point() +
-  geom_hline(yintercept = 0, col = "red") +
+  geom_hline(yintercept = 0, col = "red") +  # Add a horizontal line at 0
+  xlab("Predictor") +
+  ylab("Residuals") +
+  ggtitle("Residuals vs. Predictor") +
+  theme_minimal()
+
+```
+I plotted residuals against observation order to test uncorrelated errors. If errors are uncorrelated, residuals should scatter randomly around the horizontal axis without any clear pattern. From @fig-resid, we can see that residuals appear to be randomly distributed across observations, which satisfy the assumption of independence in the linear regression model. But there still have some larger residuals, we can regard these points as potential outliers.
+\newpage
+
+```{r}
+#| label: fig-constant-variance
+#| fig-cap: Constant variance testing
+#| echo: false
+#| warning: false
+#| message: false
+
+fitted_values <- fitted(model)
+residuals <- resid(model)
+
+# Create a data frame with fitted values and residuals
+residuals_df <- data.frame(fitted_values = fitted_values, residuals = residuals)
+
+# Plot Residuals vs Fitted values to check for constant variance
+ggplot(residuals_df, aes(x = fitted_values, y = residuals)) +
+  geom_point() +
+  geom_smooth(method = "loess", color = "red", se = FALSE) +
+  geom_hline(yintercept = 0, color = "blue") +
   xlab("Fitted Values") +
+<<<<<<< HEAD
+  ylab("Residuals") +
+  ggtitle("Residuals vs Fitted Values Plot") +
+  theme_minimal()
+```
+The constant variance assumption means we assume that the variance of the marginal distribution of responses does not change with the value of the predictor. The red loess curve added to the plot highlights this trend, showing a wider spread of residuals as the fitted values rise. From @fig-constant-variance, all data points lead to a fanning effect which against the assumption of constant variance(also known as homoskedasticity). The red loess curve added to the plot highlights this trend, showing a wider spread of residuals as the fitted values rise.
+For linearity, the residuals are scattered relatively randomly around the horizontal line at zero, without showing any distinct or systematic patterns, such as curves or trends. Based on the @fig-constant-variance plot, most of the residuals are centered around the horizontal line and no obvious non-linear patterns like U-shaped or inverted U-shaped trends in the plot, which satisfies the assumption of linearity, although there are a few outliers. This suggests that the relationship between the predictors (like lot_area, overall_qual, and year_built) and the response variable (sale price) is mostly linear.
+\newpage
+=======
   ylab("Residuals")
 ```
+>>>>>>> main
 
 ```{r}
 #| label: fig-qq
@@ -174,6 +256,7 @@ ggplot(data, aes(x = fitted(model), y = resid(model))) +
 qqnorm(resid(model))
 qqline(resid(model), col = "red")
 ```
+In a well-behaved model that follows a normal distribution, the points in the Q-Q plot should align closely with the red reference line. Based on the @fig-qq, most of the residuals are near the red line, which suggests that the central part of the residual distribution generally follows a normal distribution. Although there are some deviations at the tails, these are unlikely to have a major impact on the model's overall performance. Therefore, the Q-Q plot indicates that the data mostly satisfies the normality assumption.
 
 \newpage
 
@@ -183,9 +266,13 @@ qqline(resid(model), col = "red")
 
 ## Contributions {#sec-contribution}
 
+<<<<<<< HEAD
+Yanzun Jiang: Organized discussions and meetings; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
+=======
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
 
 Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; completed @sec-data in the proposal; made the reference list; revised and combined group member's work together.
+>>>>>>> main
 
 Siyuan Lu: 
 
