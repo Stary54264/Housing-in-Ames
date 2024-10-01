@@ -23,8 +23,6 @@ library(knitr)
 
 # Introduction
 
-@citeR
-
 # Data Description {#sec-data}
 
 ```{r}
