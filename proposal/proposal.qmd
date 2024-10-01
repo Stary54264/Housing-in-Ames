@@ -143,6 +143,8 @@ From the summary table (@tbl-summary), we can easily see that `mas_vnr_area` and
 
 # Ethics Discussion {#sec-ethics}
 
+Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to keep some key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data. Stakeholders of our analysis include homeowners, potential buyers, real estate agents, and policymakers.
+
 # Preliminary Results {#sec-results}
 
 ```{r}
