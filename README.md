@@ -23,14 +23,14 @@ Proposed research question
 -   [X] It is directly connected to the stated importance/relevance of the project topic.
 
 Literature summary
--   [ ] Three legitimate peer-reviewed articles are summarized.
+-   [X] Three legitimate peer-reviewed articles are summarized.
 -   [ ] The main result of each article is summarized concisely and in the context of the original study population.
 -   [ ] A strong and explicit connection is made between each article’s results and the proposed research question.
 
 Suitability of linear regression
--   [ ] Uses appropriate terminology from the course materials.
--   [ ] Provides a reasonable justification for why and how estimating a linear trend will answer the research question proposed.
--   [ ] Provides a reasonable justification for whether the focus of the model will be on interpretability (description) or precision/accuracy (prediction).
+-   [X] Uses appropriate terminology from the course materials.
+-   [X] Provides a reasonable justification for why and how estimating a linear trend will answer the research question proposed.
+-   [X] Provides a reasonable justification for whether the focus of the model will be on interpretability (description) or precision/accuracy (prediction).
 
 Description of data source
 -   [X] Where the data was sourced/downloaded from is explicitly mentioned with a corresponding citation in the bibliography.
@@ -55,10 +55,10 @@ Preliminary model discussion
 Overall Proposal Formatting
 -   [X] The bibliography and in-text citations are formatted correctly using a consistent style.
 -   [ ] Word counts for each section are met or are no more than 15 words in excess.
--   [ ] Headers and paragraphs are used effectively to increase readability and separate ideas for increased comprehension.
+-   [X] Headers and paragraphs are used effectively to increase readability and separate ideas for increased comprehension.
 -   [ ] No R code or R output (other than plots) are displayed in the written proposal.
 
 Ethics Discussion
--   [ ] Answer correctly references some of the criteria discussed in the first ethics module.
--   [ ] Response makes a reasonable and clear attempt to argue for its conclusion.
--   [ ] Meets minimum and maximum word count.
+-   [X] Answer correctly references some of the criteria discussed in the first ethics module.
+-   [X] Response makes a reasonable and clear attempt to argue for its conclusion.
+-   [X] Meets minimum and maximum word count.

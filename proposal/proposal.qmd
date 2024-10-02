@@ -27,11 +27,11 @@ The primary research question we aim to answer is: what are the key factors that
 
 Linear regression provides coefficients that quantify the relationship between each predictor and the response variable, making it easier to interpret the impact of each factor on house prices. Specifically, it will provide estimates of how much the sale price is expected to change with a one-unit change in each predictor variable, holding other variables constant. Our primary goal is to understand the impact of each predictor on house prices, so the focus should be on interpretability instead of precision or accuracy.
 
-We found several peer-reviewed articles that focus on similar problems with this paper. @influencing analyzed the influence factors for market supply and demand of commodity housing, and established price influence factors analysis model based on multiple linear regression. This article studies influencing factors of house price using linear regression as we do, providing an example how to set a linear regression on factors and house price.
+We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" established price influence factors analysis model based on multiple linear regression (@influencing). This article studies influencing factors of house price using linear regression as we do, providing an example how to set a linear regression on factors and house price.
 
-In @range, authors develop a novel fuzzy linear regression framework using symmetric and asymmetric trapezoidal fuzzy numbers for determining the relationship of particular (non-) policy factors with the house prices. This article shows the relationship between policy factors and house price, which demonstrates a different aspect of our research question.
+In "The Range of Uncertainty on the Property Market Pricing", authors develop a novel fuzzy linear regression framework using symmetric and asymmetric trapezoidal fuzzy numbers for determining the relationship of particular (non-) policy factors with the house prices (@range). This article shows the relationship between policy factors and house price, which demonstrates a different aspect of our research question.
 
-The research @MLT attempts to predict the price of a house using Extreme Gradient (XG) boosting algorithm and hedonic regression pricing with 13 variables as inputs to predict house prices. This article uses an alternative regression method to study the relationship between multiple factors and house price.
+The research "House Price Prediction Using Hedonic Pricing Model and Machine Learning Techniques" attempts to predict the price of a house using Extreme Gradient (XG) boosting algorithm and hedonic regression pricing with 13 variables as inputs to predict house prices (@MLT). This article uses an alternative regression method to study the relationship between multiple factors and house price.
 
 In @sec-data, we introduce the source and overview of our dataset. Variables used in regression is explained in detail. Then, in @sec-ethics, we talk about the data ethics. In @sec-results, we address the result of the regression model, plots that verifies the assumptions, and descriptions. Finally, group contribution of each of our team menber is stated in @sec-contribution.
 
@@ -142,7 +142,9 @@ From the summary table (@tbl-summary), we can easily see that `mas_vnr_area` and
 
 # Ethics Discussion {#sec-ethics}
 
-Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to only keep some necessary key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data. The cleaned data we are using includes some detailed information about housing characteristics, but does not contain personal identifiers. The analysis can provide deeper insights for stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisionsabout buying, selling and investing in real estate. The Ames housing dataset has gained popularity, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
+Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to only keep some necessary key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data. The cleaned data we are using includes some detailed information about housing characteristics, but does not contain personal identifiers.
+
+The analysis can provide deeper insights for stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisions about buying, selling and investing in real estate. The Ames housing dataset has gained popularity, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
 
 # Preliminary Results {#sec-results}
 
@@ -161,61 +163,51 @@ model <- lm(sale_price ~
               mas_vnr_area + total_bsmt_sf + central_air + garage_area +
               misc_val, data = data
 )
+
+# Take out the fitted values and residuals
+fit <- fitted(model)
+res <- resid(model)
+
+# Create data frames
+obs_res <- data.frame(obs = 1:length(res), res = res)
+
+fit_res <- data.frame(fit = fit, res = res)
 ```
 
 ```{r}
-#| label: fig-resid
-#| fig-cap: Uncorrelated errors testing
+#| label: fig-obs-res
+#| fig-cap: Residuals vs. Observation Index
 #| echo: false
 #| warning: false
 #| message: false
 
-# value residuals
-
-residuals <- resid(model)
-
-# Create a data frame with residuals and observation order (index)
-residuals_df <- data.frame(residuals = residuals, observation = 1:length(residuals))
-
-# Plot residuals against observation index to check for uncorrelated errors
-ggplot(residuals_df, aes(x = observation, y = residuals)) +
+# Plot residuals against observation index
+ggplot(obs_res, aes(x = obs, y = res)) +
   geom_point() +
-  geom_hline(yintercept = 0, col = "red") +  # Add a horizontal line at 0
-  xlab("Predictor") +
+  geom_hline(yintercept = 0, col = "red") +
+  xlab("Predictor Index") +
   ylab("Residuals") +
-  ggtitle("Residuals vs. Predictor") +
   theme_minimal()
 ```
 
-We plotted residuals against observation order to test uncorrelated errors. If errors are uncorrelated, residuals should scatter randomly around the horizontal axis without any clear pattern. From @fig-resid, we can see that residuals appear to be randomly distributed across observations, which satisfy the assumption of independence in the linear regression model. But there still have some larger residuals, we can regard these points as potential outliers.
+From @fig-obs-res, we can see that residuals appear to be randomly scattered along the x-axis without any special patterns, which means the dataset satisfies the uncorrelated errors assumption.
 
 ```{r}
-#| label: fig-constant-variance
-#| fig-cap: Constant variance testing
+#| label: fig-fit-res
+#| fig-cap: Residuals vs. Fitted Values
 #| echo: false
 #| warning: false
 #| message: false
 
-fitted_values <- fitted(model)
-residuals <- resid(model)
-
-# Create a data frame with fitted values and residuals
-residuals_df <- data.frame(fitted_values = fitted_values, residuals = residuals)
-
-# Plot Residuals vs Fitted values to check for constant variance
-ggplot(residuals_df, aes(x = fitted_values, y = residuals)) +
+# Plot residuals against fitted values
+ggplot(fit_res, aes(x = fit, y = res)) +
   geom_point() +
-  geom_smooth(method = "loess", color = "red", se = FALSE) +
-  geom_hline(yintercept = 0, color = "blue") +
   xlab("Fitted Values") +
   ylab("Residuals") +
-  ggtitle("Residuals vs Fitted Values Plot") +
   theme_minimal()
 ```
 
-The constant variance assumption means we assume that the variance of the marginal distribution of responses does not change with the value of the predictor. The red loess curve added to the plot highlights this trend, showing a wider spread of residuals as the fitted values rise. From @fig-constant-variance, all data points lead to a fanning effect which against the assumption of constant variance(also known as homoskedasticity). The red loess curve added to the plot highlights this trend, showing a wider spread of residuals as the fitted values rise.
-
-For linearity, the residuals are scattered relatively randomly around the horizontal line at zero, without showing any distinct or systematic patterns, such as curves or trends. Based on the @fig-constant-variance plot, most of the residuals are centered around the horizontal line and no obvious non-linear patterns like U-shaped or inverted U-shaped trends in the plot, which satisfies the assumption of linearity, although there are a few outliers. This suggests that the relationship between the predictors (like lot_area, overall_qual, and year_built) and the response variable (sale price) is mostly linear.
+From @fig-fit-res, all points are randomly scattered alone a straight line, showing a linear relationship. Thus, it satisfies the linearity assumption. However, the graph shows a wider spread in errors with the increase of the fitted values. This means the dataset has violated the constant variance assumption. To solve this, we can use variance stabilizing transformation or box-cox transformation in the later analysis.
 
 ```{r}
 #| label: fig-qq
@@ -224,12 +216,12 @@ For linearity, the residuals are scattered relatively randomly around the horizo
 #| warning: false
 #| message: false
 
-# QQ plot
-qqnorm(resid(model))
-qqline(resid(model), col = "red")
+# Plot the Q-Q plot
+qqnorm(res)
+qqline(res, col = "red")
 ```
 
-In a well-behaved model that follows a normal distribution, the points in the Q-Q plot should align closely with the red reference line. Based on the @fig-qq, most of the residuals are near the red line, which suggests that the central part of the residual distribution generally follows a normal distribution. Although there are some deviations at the tails, these are unlikely to have a major impact on the model's overall performance. Therefore, the Q-Q plot indicates that the data mostly satisfies the normality assumption.
+From @fig-qq, most of the points lies on the diagonal, which gives evidence that the distribution of the errors are normally distributed. Although some points at the tails are away from the diagonal, they are unlikely to have a major impact on the model's overall performance. Therefore, it satisfies the normality assumption.
 
 \newpage
 
@@ -245,7 +237,7 @@ Group contribution is available at <https://github.com/Stary54264/Housing-in-Ame
 
 - Siyuan Lu: Set research question and hypothesis; searched and read peer-reviewed articles; introduced the project; checked data ethics.
 
-- Yi Tang: Built linear regression model to predict house sale prices by using five key predictors in cleaned data. It assisted to understand the relationship between variables and ensure data meets key assumptions for statistical validity.
+- Yi Tang: Built linear regression model; checked conditions for performing linear regression; checked extra conditions for performing multiple linear regression; showed the results of this analysis.
 
 \newpage
 
