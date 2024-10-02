@@ -45,5 +45,55 @@ kable(summary_table, format = "markdown")
 ```
 
 ```{r}
+# Convert variables to factors
+cleaned_data$central_air <- as.factor(cleaned_data$central_air)
+cleaned_data$roof_style <- as.factor(cleaned_data$roof_style)
+
+# Fit the linear model
+model <- lm(sale_price ~
+              lot_area + overall_qual + year_built + roof_style +
+              mas_vnr_area + total_bsmt_sf + central_air + garage_area +
+              misc_val, data = cleaned_data
+)
+
+# Take out the fitted values and residuals
+fit <- fitted(model)
+res <- resid(model)
+
+# Create data frames
+obs_res <- data.frame(obs = 1:length(res), res = res)
+fit_res <- data.frame(fit = fit, res = res)
+```
+
+```{r}
+# Plot residuals against observation index
+ggplot(obs_res, aes(x = obs, y = res)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "red") +
+  xlab("Predictor Index") +
+  ylab("Residuals") +
+  theme_minimal()
+```
+
+```{r}
+# Plot residuals against fitted values
+ggplot(fit_res, aes(x = fit, y = res)) +
+  geom_point() +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  theme_minimal()
+```
+
+```{r}
+# Plot the Q-Q plot
+qqnorm(res)
+qqline(res, col = "red")
+```
+
+```{r}
+
+```
+
+```{r}
 
 ```
