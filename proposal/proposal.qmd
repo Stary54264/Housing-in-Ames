@@ -29,7 +29,7 @@ Linear regression provides coefficients that quantify the relationship between e
 
 We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" concludes that housing prices are negatively correlated with housing completion costs, land acquisition prices, urban residents’ disposable income, and urban population density (@influencing). This article provides some characteristics other than what we use that can also influence house price in national scope.
 
-In "Flood Risk as a Price-setting Factor in the Market Value of Real Property", the analyzed market consider flood risk almost indifferent with house price compare to other factors in the analysis. (@flood). This article offers a great example of our research since it uses multiple linear regression with some similar predictors as ours.
+In "Flood Risk as a Price-Setting Factor in the Market Value of Real Property", the analyzed market consider flood risk almost indifferent with house price compare to other factors in the analysis. (@flood). This article offers a great example of our research since it uses multiple linear regression with some similar predictors as ours.
 
 The research "House Price Prediction Using Hedonic Pricing Model and Machine Learning Techniques" shows that XGBoosting has higher accuracy in comparison to hedonic pricing model in prediction of property price. (@MLT). This article provides an alternative method to study the relationship between multiple factors and house price.
 

@@ -24,8 +24,8 @@ Proposed research question
 
 Literature summary
 -   [X] Three legitimate peer-reviewed articles are summarized.
--   [ ] The main result of each article is summarized concisely and in the context of the original study population.
--   [ ] A strong and explicit connection is made between each article’s results and the proposed research question.
+-   [X] The main result of each article is summarized concisely and in the context of the original study population.
+-   [X] A strong and explicit connection is made between each article’s results and the proposed research question.
 
 Suitability of linear regression
 -   [X] Uses appropriate terminology from the course materials.
