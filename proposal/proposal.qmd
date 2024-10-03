@@ -181,7 +181,6 @@ fit_res <- data.frame(fit = fit, res = res)
 # Plot residuals against observation index
 ggplot(obs_res, aes(x = obs, y = res)) +
   geom_point() +
-  geom_hline(yintercept = 0, col = "red") +
   xlab("Predictor Index") +
   ylab("Residuals") +
   theme_minimal()
