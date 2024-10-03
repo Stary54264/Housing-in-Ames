@@ -217,36 +217,40 @@ qqnorm(res)
 qqline(res, col = "red")
 ```
 
-From @fig-qq, most of the points lies on the diagonal, which gives evidence that the distribution of the errors are normally distributed. Although some points at the tails are away from the diagonal, they are unlikely to have a major impact on the model's overall performance. Therefore, it satisfies the normality assumption.
-
-\newpage
+From @fig-qq, most of the points lies on the diagonal, which gives evidence that the distribution of the errors are normally distributed. Therefore, it satisfies the normality assumption.
 
 ```{r}
-#| label: fig-resi-resp
-#| fig-cap: Residuals vs. Response
+#| label: fig-fit-resp
+#| fig-cap: Responses vs. Fitted Values
 #| echo: false
 #| warning: false
 #| message: false
 
-y_hat <- fitted(model)
-
-# Comparing fitted values to the actual Price
-plot(x = y_hat, y = data$Price, 
-     main = "Price vs Fitted", 
-     xlab = "Fitted Values", 
-     ylab = "Price")
+# Plot responses against fitted values
+plot(x = fit, y = data$sale_price,
+     xlab = "Fitted Values",
+     ylab = "Responses")
 
 abline(a = 0, b = 1, lty = 2)
 ```
-From @fig-resi-resp, it indicates that the current model may not be fully capturing the relationship between the features and the actual prices.
-```{r}
-# Cleaned_data has columns 2 to 9 that need to plot
-pairs(data[, 2:9], 
-      main = "Pairwise Scatterplots")
-```
-The lack of significant curves or non-linear patterns in the paired scatterplots indicates the predictors are largely linearly or weakly associated.The dataset is appropriate for linear regression because this validates the linearity assumption.
 
-Result: A one-unit increase in lot_area will result in an 1.24 increase in sale price. For each one-point increase in overall_qual, the sale price will increase by 28596.94. A one-year increase in the year_built variable is expected to lead to an 189.49 increase in sale price. A one-unit increase in mas_vnr_area is expected to change the sale price by 53.04. And a one-unit increase in basement size is expected to change the sale price by 28.98. Cental air这里感觉有点问题，因为它的值我觉得应该是正的吧（因为有了ac，sale price下降了？）. A one-unit increase in garage_area will increase the sale price by 62.75. At last, a one-unit change in misc_val would correspond to -6.88 decrease in sale price.
+From @fig-fit-resp, we can see that all points are randomly scattered alone the diagonal, which implies that the mean responses are a single function of a linear combination.
+
+```{r}
+#| label: fig-pair
+#| fig-cap: Pairwise Scatterplots of Predictors
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot predictors against each other
+pairs(data[, 2:9])
+```
+@fig-pair shows no significant curves, which indicates the predictors are linearly or weakly associated. Thus, every predictor is related to each other in no more complicated way than linearly.
+
+Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. A one-unit increase in `lot_area`, `overall_qual`, `year_built`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val` would result in the expected value of `sale_price` to incease by 1.24, 28596.94, 189.49, 53.04, 28.98, 62.75, and -6.88 respectively. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`.
+
+\newpage
 
 \appendix
 
