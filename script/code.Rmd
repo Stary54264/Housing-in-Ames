@@ -91,9 +91,14 @@ qqline(res, col = "red")
 ```
 
 ```{r}
+# Plot responses against fitted values
+plot(x = fit, y = cleaned_data$sale_price,
+     xlab = "Fitted Values",
+     ylab = "Responses")
 
+abline(a = 0, b = 1, lty = 2)
 ```
 
 ```{r}
-
+pairs(cleaned_data[, 2:9])
 ```
