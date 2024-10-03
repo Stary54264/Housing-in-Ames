@@ -217,7 +217,38 @@ qqnorm(res)
 qqline(res, col = "red")
 ```
 
-From @fig-qq, most of the points lies on the diagonal, which gives evidence that the distribution of the errors are normally distributed. Although some points at the tails are away from the diagonal, they are unlikely to have a major impact on the model's overall performance. Therefore, it satisfies the normality assumption.
+From @fig-qq, most of the points lies on the diagonal, which gives evidence that the distribution of the errors are normally distributed. Therefore, it satisfies the normality assumption.
+
+```{r}
+#| label: fig-fit-resp
+#| fig-cap: Responses vs. Fitted Values
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot responses against fitted values
+plot(x = fit, y = data$sale_price,
+     xlab = "Fitted Values",
+     ylab = "Responses")
+
+abline(a = 0, b = 1, lty = 2)
+```
+
+From @fig-fit-resp, we can see that all points are randomly scattered alone the diagonal, which implies that the mean responses are a single function of a linear combination.
+
+```{r}
+#| label: fig-pair
+#| fig-cap: Pairwise Scatterplots of Predictors
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot predictors against each other
+pairs(data[, 2:9])
+```
+@fig-pair shows no significant curves, which indicates the predictors are linearly or weakly associated. Thus, every predictor is related to each other in no more complicated way than linearly.
+
+Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. A one-unit increase in `lot_area`, `overall_qual`, `year_built`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val` would result in the expected value of `sale_price` to incease by 1.24, 28596.94, 189.49, 53.04, 28.98, 62.75, and -6.88 respectively. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`.
 
 \newpage
 
