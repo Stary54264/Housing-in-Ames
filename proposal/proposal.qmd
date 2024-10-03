@@ -250,6 +250,8 @@ pairs(data[, 2:9])
 
 Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. A one-unit increase in `lot_area`, `overall_qual`, `year_built`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val` would result in the expected value of `sale_price` to incease by 1.24, 28596.94, 189.49, 53.04, 28.98, 62.75, and -6.88 respectively. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`.
 
+The results of this preliminary analysis are consistent with findings in the literature, which indicates that some aspects of a property, such its lot area, general quality, and garage size, have a substantial impact on its price. One noteworthy distinction is that this model's central air conditioning has a negative effect, in contrast to the majority of studies that suggest central air enhances home value. This gap might be the result of variables unique to the market or interactions with other variables; hence, more research is necessary to fully examine these links.
+
 \newpage
 
 \appendix
