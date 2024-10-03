@@ -43,12 +43,12 @@ Predictor variable summaries
 -   [X] A justification for why the chosen predictor variables are relevant to answering the research question, making explicit reference to the summarized literature and to any modifications to variables that have been made.
 
 Residual analysis of preliminary model
--   [ ] All plots needed for a complete residual analysis have been presented, are correct, and are easily readable with appropriate axes and labels.
--   [ ] Each assumption and condition are assessed and a conclusion for each is provided.
--   [ ] Correct details are provided, with reference to the appropriate plot, to describe how such a conclusion was made for each assumption and condition.
+-   [X] All plots needed for a complete residual analysis have been presented, are correct, and are easily readable with appropriate axes and labels.
+-   [X] Each assumption and condition are assessed and a conclusion for each is provided.
+-   [X] Correct details are provided, with reference to the appropriate plot, to describe how such a conclusion was made for each assumption and condition.
 
 Preliminary model discussion
--   [ ] Model estimates from preliminary model are presented in an easily readable, understandable, and professional way.
+-   [X] Model estimates from preliminary model are presented in an easily readable, understandable, and professional way.
 -   [ ] A discussion on what these estimates tell the reader about a possible answer to the research question is provided in context, highlighting the effect of at least one numerical and one categorical predictor explicitly.
 -   [ ] A comparison is made between the preliminary model results and those summarised from the literature, and it is discussed why these may be similar or different.
 
