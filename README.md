@@ -50,7 +50,7 @@ Residual analysis of preliminary model
 Preliminary model discussion
 -   [X] Model estimates from preliminary model are presented in an easily readable, understandable, and professional way.
 -   [ ] A discussion on what these estimates tell the reader about a possible answer to the research question is provided in context, highlighting the effect of at least one numerical and one categorical predictor explicitly.
--   [ ] A comparison is made between the preliminary model results and those summarised from the literature, and it is discussed why these may be similar or different.
+-   [X] A comparison is made between the preliminary model results and those summarised from the literature, and it is discussed why these may be similar or different.
 
 Overall Proposal Formatting
 -   [X] The bibliography and in-text citations are formatted correctly using a consistent style.
