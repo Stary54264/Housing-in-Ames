@@ -17,6 +17,7 @@ bibliography: references.bib
 
 library(tidyverse)
 library(knitr)
+library(patchwork)
 ```
 
 \newpage
@@ -83,11 +84,11 @@ kable(head(data2), format = "markdown")
 
 The Ames Housing dataset (@tbl-data-1, @tbl-data-2) was sourced from the `AmesHousing` package (@ameshousing) in R (@citeR). It was originally compiled by the Ames City Assessor's Office through a comprehensive data dump of property tax records from 2006 to 2010, and it aimed to document residential property sales (@ames). The dataset was initially designed for property tax assessments and general valuation, focusing on property characteristics such as lot area, the year built, and sale price. In contrast, this research aims to analyze how various property features influence house prices in Ames.
 
-The dataset consists of 2930 observations and 82 variables relevant to understanding housing market dynamics. It was cleaned using `tidyverse` package (@tidyverse). After cleaning, we selected 1 response variable, `sale_price`, and 9 predictor variables: `lot_area`, `overall_qual`, `year_built`, `roof_style`, `mas_vnr_area`, `total_bsmt_sf`, `central_air`, `garage_area`, and `misc_val`.
+The dataset consists of 2930 observations and 82 variables relevant to understanding housing market dynamics. After cleaning, we selected 1 response variable, `sale_price`, and 9 predictor variables: `lot_area`, `overall_qual`, `year_built`, `roof_style`, `mas_vnr_area`, `total_bsmt_sf`, `central_air`, `garage_area`, and `misc_val`.
 
-- `sale_price`: Priceof the house in dollars
+- `sale_price`: Price of the house
 
-- `lot_area`: Lot size in square feet
+- `lot_area`: Lot size
 
 - `overall_qual`: Rates the overall material and finish of the house
 
@@ -95,17 +96,19 @@ The dataset consists of 2930 observations and 82 variables relevant to understan
 
 - `roof_style`: Type of roof
 
-- `mas_vnr_area`: Masonry veneer area in square feet
+- `mas_vnr_area`: Masonry veneer area
 
-- `total_bsmt_sf`: Total square feet of basement area
+- `total_bsmt_sf`: Total area of basement
 
 - `central_air`: Central air conditioning
 
-- `garage_area`: Size of garage in square feet
+- `garage_area`: Size of garage
 
-- `misc_val`: Value of miscellaneous feature in dollars
+- `misc_val`: Value of miscellaneous feature
 
-These predictor variables all show the quality of the house, which will affect the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
+These predictor variables all show the quality of the house, which affects the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
+
+In this analysis, we will use these packages in R: `tidyverse` (@tidyverse), `knitr` (@knitr), and `patchwork` (@patchwork).
 
 ```{r}
 #| echo: false
@@ -136,7 +139,7 @@ summary_table <- data.frame(
 kable(summary_table, format = "markdown")
 ```
 
-From the summary table (@tbl-summary), we can easily see that `mas_vnr_area` and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames, Iowa.
+From the summary table (@tbl-summary), we can see that `mas_vnr_area` and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames.
 
 # Ethics Discussion {#sec-ethics}
 
@@ -172,38 +175,31 @@ fit_res <- data.frame(fit = fit, res = res)
 ```
 
 ```{r}
-#| label: fig-obs-res
+#| label: fig-res
 #| fig-cap: Residuals vs. Observation Index
 #| echo: false
 #| warning: false
 #| message: false
 
 # Plot residuals against observation index
-ggplot(obs_res, aes(x = obs, y = res)) +
+graph1 <- ggplot(obs_res, aes(x = obs, y = res)) +
   geom_point() +
   xlab("Predictor Index") +
   ylab("Residuals") +
   theme_minimal()
-```
-
-From @fig-obs-res, we can see that residuals appear to be randomly scattered along the x-axis without any special patterns, which means the dataset satisfies the uncorrelated errors assumption.
-
-```{r}
-#| label: fig-fit-res
-#| fig-cap: Residuals vs. Fitted Values
-#| echo: false
-#| warning: false
-#| message: false
 
 # Plot residuals against fitted values
-ggplot(fit_res, aes(x = fit, y = res)) +
+graph2 <- ggplot(fit_res, aes(x = fit, y = res)) +
   geom_point() +
   xlab("Fitted Values") +
   ylab("Residuals") +
   theme_minimal()
+
+# Show 2 residual plots together
+graph1 + graph2
 ```
 
-From @fig-fit-res, all points are randomly scattered alone a straight line, showing a linear relationship. Thus, it satisfies the linearity assumption. However, the graph shows a wider spread in errors with the increase of the fitted values. This means the dataset has violated the constant variance assumption. To solve this, we can use variance stabilizing transformation or box-cox transformation in the later analysis.
+From the left graph in @fig-res, we can see that residuals appear to be randomly scattered along a straight line, satisfying the uncorrelated errors assumption. In the right graph, all points are randomly scattered alone a straight line, satisfying the linearity assumption. However, there is a wider spread in residuals when fitted value increases. So, it violates the constant variance assumption. To solve this, we can use box-cox transformation in further analysis.
 
 ```{r}
 #| label: fig-qq
@@ -217,7 +213,7 @@ qqnorm(res)
 qqline(res, col = "red")
 ```
 
-From @fig-qq, most of the points lies on the diagonal, which gives evidence that the distribution of the errors are normally distributed. Therefore, it satisfies the normality assumption.
+From @fig-qq, most of the points lies on the diagonal, satisfying the normality assumption.
 
 ```{r}
 #| label: fig-fit-resp
@@ -246,9 +242,12 @@ From @fig-fit-resp, we can see that all points are randomly scattered alone the 
 # Plot predictors against each other
 pairs(data[, 2:9])
 ```
-@fig-pair shows no significant curves, which indicates the predictors are linearly or weakly associated. Thus, every predictor is related to each other in no more complicated way than linearly.
+@fig-pair shows no significant curves, which indicates that every predictor is related to each other in no more complicated way than linearly.
 
-Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. A one-unit increase in `lot_area`, `overall_qual`, `year_built`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val` would result in the expected value of `sale_price` to incease by 1.24, 28596.94, 189.49, 53.04, 28.98, 62.75, and -6.88 respectively. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`.
+Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. The numerical predictors all have a positive impact on the expected value of `sale_price`, except `misc_val`. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`. Apparently, increasing the area of the house would make it more expensive, while allowing the air conditioner to be centrally controlled would make it cheaper.
+
+The results of this preliminary analysis are consistent with findings in the literature, which indicates that some aspects of a property, such as `lot_area`, `overall_qual`, and `garage_area`, have a impact on `sale_price`. This is because that the predictors we use are the most evident variables that affect the price of the houses.
+
 
 \newpage
 
