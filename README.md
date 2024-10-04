@@ -54,9 +54,9 @@ Preliminary model discussion
 
 Overall Proposal Formatting
 -   [X] The bibliography and in-text citations are formatted correctly using a consistent style.
--   [ ] Word counts for each section are met or are no more than 15 words in excess.
+-   [X] Word counts for each section are met or are no more than 15 words in excess.
 -   [X] Headers and paragraphs are used effectively to increase readability and separate ideas for increased comprehension.
--   [ ] No R code or R output (other than plots) are displayed in the written proposal.
+-   [X] No R code or R output (other than plots) are displayed in the written proposal.
 
 Ethics Discussion
 -   [X] Answer correctly references some of the criteria discussed in the first ethics module.

@@ -67,21 +67,21 @@ fit_res <- data.frame(fit = fit, res = res)
 
 ```{r}
 # Plot residuals against observation index
-ggplot(obs_res, aes(x = obs, y = res)) +
+graph1 <- ggplot(obs_res, aes(x = obs, y = res)) +
   geom_point() +
-  geom_hline(yintercept = 0, col = "red") +
   xlab("Predictor Index") +
   ylab("Residuals") +
   theme_minimal()
-```
 
-```{r}
 # Plot residuals against fitted values
-ggplot(fit_res, aes(x = fit, y = res)) +
+graph2 <- ggplot(fit_res, aes(x = fit, y = res)) +
   geom_point() +
   xlab("Fitted Values") +
   ylab("Residuals") +
   theme_minimal()
+
+# Show 2 residual plots together
+graph1 + graph2
 ```
 
 ```{r}

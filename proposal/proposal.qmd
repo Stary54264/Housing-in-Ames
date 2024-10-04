@@ -111,7 +111,7 @@ These predictor variables all show the quality of the house, which affects the p
 In this analysis, we will use these packages in R: `tidyverse` (@tidyverse), `knitr` (@knitr), and `patchwork` (@patchwork).
 
 ```{r}
-#| echo: false
+#| include: false
 #| warning: false
 #| message: false
 
@@ -150,7 +150,7 @@ The analysis can provide deeper insights for stakeholders, including homeowners,
 # Preliminary Results {#sec-results}
 
 ```{r}
-#| echo: false
+#| include: false
 #| warning: false
 #| message: false
 
