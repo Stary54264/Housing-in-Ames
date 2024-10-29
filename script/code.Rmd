@@ -1,0 +1,104 @@
+---
+title: "code"
+author: "Yanzun Jiang, Yi Tang"
+date: "30 September 2024"
+output: pdf_document
+---
+
+```{r}
+# Workspace setup
+library(tidyverse)
+library(AmesHousing)
+library(knitr)
+```
+
+```{r}
+# Download data
+raw_data <- ames_raw
+```
+
+```{r}
+# Basic cleaning of the data
+cleaned_data <-
+  raw_data |>
+  janitor::clean_names() |>
+  select(sale_price, lot_area, overall_qual, year_built, roof_style,
+         mas_vnr_area, total_bsmt_sf, central_air, garage_area, misc_val) |>
+  filter_all(all_vars(!is.na(.)))
+```
+
+```{r}
+# Generate a dataset that only consists numerical data
+data_numerical <- cleaned_data |>
+  select(sale_price, lot_area, overall_qual, year_built,
+         mas_vnr_area, total_bsmt_sf, garage_area, misc_val
+  )
+
+# Generate a summarize table
+summary_table <- data.frame(
+  Mean = round(apply(data_numerical, 2, mean), 2),
+  Standard_Deviation = round(apply(data_numerical, 2, sd), 2),
+  Median = round(apply(data_numerical, 2, median), 2)
+)
+
+kable(summary_table, format = "markdown")
+```
+
+```{r}
+# Convert variables to factors
+cleaned_data$central_air <- as.factor(cleaned_data$central_air)
+cleaned_data$roof_style <- as.factor(cleaned_data$roof_style)
+
+# Fit the linear model
+model <- lm(sale_price ~
+              lot_area + overall_qual + year_built + roof_style +
+              mas_vnr_area + total_bsmt_sf + central_air + garage_area +
+              misc_val, data = cleaned_data
+)
+
+# Take out the fitted values and residuals
+fit <- fitted(model)
+res <- resid(model)
+
+# Create data frames
+obs_res <- data.frame(obs = 1:length(res), res = res)
+fit_res <- data.frame(fit = fit, res = res)
+```
+
+```{r}
+# Plot residuals against observation index
+graph1 <- ggplot(obs_res, aes(x = obs, y = res)) +
+  geom_point() +
+  xlab("Predictor Index") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against fitted values
+graph2 <- ggplot(fit_res, aes(x = fit, y = res)) +
+  geom_point() +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 2 residual plots together
+graph1 + graph2
+```
+
+```{r}
+# Plot the Q-Q plot
+qqnorm(res)
+qqline(res, col = "red")
+```
+
+```{r}
+# Plot responses against fitted values
+plot(x = fit, y = cleaned_data$sale_price,
+     xlab = "Fitted Values",
+     ylab = "Responses")
+
+abline(a = 0, b = 1, lty = 2)
+```
+
+```{r}
+pairs(cleaned_data[, 2:9])
+```
