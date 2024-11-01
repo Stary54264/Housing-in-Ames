@@ -33,7 +33,7 @@ The repo is structured as:
 -   [ ] Start/End points (and, where applicable, continuations) are denoted using correct shape with appropriate labels.
 
 **Modules 1 & 2 Content**
--   [ ] An initial/preliminary model is explicitly provided and is described in the context of the research question.
+-   [X] An initial/preliminary model is explicitly provided and is described in the context of the research question.
 -   [ ] Steps that involve changing the initial model explicitly indicate that a new model has been fit to reflect this change with the exact change noted.
 -   [ ] Categorical (not individual indicator) variables in each model should be treated appropriately throughout the steps of the flowchart (e.g., tests applied correctly, plots appropriate to variable type, etc.)
 
@@ -53,7 +53,7 @@ The repo is structured as:
 -   [ ] Conclusions from inferential tool are valid based on previous steps.
 
 **Research Question**
--   [ ] The research question being addressed (like you did in final project part 1) is explicitly stated with identifiable response and predictor variables at the beginning of the flowchart.
+-   [X] The research question being addressed (like you did in final project part 1) is explicitly stated with identifiable response and predictor variables at the beginning of the flowchart.
 -   [ ] For each endpoint listed in the flowchart, it is explicitly stated how the steps leading to the endpoint could yield an answer to your research question.
 -   [ ] The potential answers to the research question are appropriate based on previous steps.
 
