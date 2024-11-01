@@ -22,20 +22,20 @@ The repo is structured as:
 ## Part 2
 
 **Flowchart Appearance**
--   [ ] Does not exceed two 8.5x11 inch pages in length.
--   [ ] Legend is provided correctly distinguishing each module of course material required.
--   [ ] Legible and easy to read without excessive magnification
+-   [X] Does not exceed two 8.5x11 inch pages in length.
+-   [X] Legend is provided correctly distinguishing each module of course material required.
+-   [X] Legible and easy to read without excessive magnification
 
 **Use of Flowchart Elements**
--   [ ] All decision steps are questions answerable by yes/no and denoted using correct shape.
--   [ ] All arrows are unidirectional, point in the correct direction and are properly labelled when exiting decision step.
--   [ ] All action steps are denoted using correct shape.
--   [ ] Start/End points (and, where applicable, continuations) are denoted using correct shape with appropriate labels.
+-   [X] All decision steps are questions answerable by yes/no and denoted using correct shape.
+-   [X] All arrows are unidirectional, point in the correct direction and are properly labelled when exiting decision step.
+-   [X] All action steps are denoted using correct shape.
+-   [X] Start/End points (and, where applicable, continuations) are denoted using correct shape with appropriate labels.
 
 **Modules 1 & 2 Content**
 -   [X] An initial/preliminary model is explicitly provided and is described in the context of the research question.
--   [ ] Steps that involve changing the initial model explicitly indicate that a new model has been fit to reflect this change with the exact change noted.
--   [ ] Categorical (not individual indicator) variables in each model should be treated appropriately throughout the steps of the flowchart (e.g., tests applied correctly, plots appropriate to variable type, etc.)
+-   [X] Steps that involve changing the initial model explicitly indicate that a new model has been fit to reflect this change with the exact change noted.
+-   [X] Categorical (not individual indicator) variables in each model should be treated appropriately throughout the steps of the flowchart (e.g., tests applied correctly, plots appropriate to variable type, etc.)
 
 **Module 3 Content**
 -   [X] All assumptions/conditions are assessed and explicitly mentioned.
@@ -48,14 +48,14 @@ The repo is structured as:
 -   [X] How tool will be used to address each violated assumption is described correctly using appropriate course terminology.
 
 **Modules 5 & 6 Content**
--   [ ] Inferential tool being used is explicitly described using correct terminology from the course and is identifiable by the reader.
--   [ ] How conclusions are made using inferential tool are correct and explicitly stated.
--   [ ] Conclusions from inferential tool are valid based on previous steps.
+-   [X] Inferential tool being used is explicitly described using correct terminology from the course and is identifiable by the reader.
+-   [X] How conclusions are made using inferential tool are correct and explicitly stated.
+-   [X] Conclusions from inferential tool are valid based on previous steps.
 
 **Research Question**
 -   [X] The research question being addressed (like you did in final project part 1) is explicitly stated with identifiable response and predictor variables at the beginning of the flowchart.
--   [ ] For each endpoint listed in the flowchart, it is explicitly stated how the steps leading to the endpoint could yield an answer to your research question.
--   [ ] The potential answers to the research question are appropriate based on previous steps.
+-   [X] For each endpoint listed in the flowchart, it is explicitly stated how the steps leading to the endpoint could yield an answer to your research question.
+-   [X] The potential answers to the research question are appropriate based on previous steps.
 
 
 ## Part 1
