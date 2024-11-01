@@ -38,14 +38,14 @@ The repo is structured as:
 -   [ ] Categorical (not individual indicator) variables in each model should be treated appropriately throughout the steps of the flowchart (e.g., tests applied correctly, plots appropriate to variable type, etc.)
 
 **Module 3 Content**
--   [ ] All assumptions/conditions are assessed and explicitly mentioned.
--   [ ] Tools used to assess each assumption/condition are appropriate and based on instructor-created materials and are explicitly described using appropriate course terminology.
--   [ ] How violated assumptions/conditions are identified is explicitly described using appropriate course terminology and is correct.
+-   [X] All assumptions/conditions are assessed and explicitly mentioned.
+-   [X] Tools used to assess each assumption/condition are appropriate and based on instructor-created materials and are explicitly described using appropriate course terminology.
+-   [X] How violated assumptions/conditions are identified is explicitly described using appropriate course terminology and is correct.
 
 **Module 4 Content**
--   [ ] Each violated assumption is addressed.
--   [ ] Choice of tool to address each violated assumption is appropriate.
--   [ ] How tool will be used to address each violated assumption is described correctly using appropriate course terminology.
+-   [X] Each violated assumption is addressed.
+-   [X] Choice of tool to address each violated assumption is appropriate.
+-   [X] How tool will be used to address each violated assumption is described correctly using appropriate course terminology.
 
 **Modules 5 & 6 Content**
 -   [ ] Inferential tool being used is explicitly described using correct terminology from the course and is identifiable by the reader.
