@@ -1,9 +1,5 @@
 # Housing in Ames
 
-## IMPORTANT!!!
-Flowchart Collaboration Link: https://lucid.app/lucidchart/12da0d5c-0b8f-4231-bdf5-8c9f6d4ade69/edit?page=0_0&invitationId=inv_acb746bd-1ba9-4125-a1e1-e66de721a4ec#
-
-
 ## Overview
 
 This repo contains all the files needed for analysis of housing data in Ames, Iowa.
