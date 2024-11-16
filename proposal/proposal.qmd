@@ -145,6 +145,7 @@ Our data is collected from Ames City Assessor's Office (@ames), then we cleaned 
 The analysis can provide deeper insights for stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisions about buying, selling and investing in real estate. The Ames housing dataset has gained popularity, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
 
 # Preliminary Results {#sec-results}
+## Test assumption
 
 ```{r}
 #| echo: false
@@ -251,6 +252,96 @@ pairs(data[, 2:9])
 Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. A one-unit increase in `lot_area`, `overall_qual`, `year_built`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val` would result in the expected value of `sale_price` to incease by 1.24, 28596.94, 189.49, 53.04, 28.98, 62.75, and -6.88 respectively. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`.
 
 The results of this preliminary analysis are consistent with findings in the literature, which indicates that some aspects of a property, such its lot area, general quality, and garage size, have a substantial impact on its price. One noteworthy distinction is that this model's central air conditioning has a negative effect, in contrast to the majority of studies that suggest central air enhances home value. This gap might be the result of variables unique to the market or interactions with other variables; hence, more research is necessary to fully examine these links.
+
+## Methods
+```{r}
+
+# Fit initial linear model
+model <- lm(sale_price ~ total_bsmt_sf + lot_area + year_built, data = data)
+
+# Residual diagnostics
+hist(residuals(model), main = "Histogram of Residuals")
+qqnorm(residuals(model)); qqline(residuals(model), col = "blue")
+shapiro.test(residuals(model))
+
+# Apply Box-Cox transformation
+boxcox_result <- boxcox(model, lambda = seq(-2, 2, 0.1))
+lambda_opt <- boxcox_result$x[which.max(boxcox_result$y)]  # Optimal lambda
+data$sale_price_transformed <- (data$sale_price^lambda_opt - 1) / lambda_opt
+
+# Refit model with transformed response
+model_trans <- lm(sale_price_transformed ~ total_bsmt_sf + lot_area + year_built, data = data)
+summary(model_trans)
+
+```
+To validate regression assumptions, residuals are tested for normality using histograms, Q-Q plots, and the Shapiro-Wilk test. Initial results show deviations from normality, confirmed by a Shapiro-Wilk p-value below 0.05. To address this, a Box-Cox transformation is applied to the response variable (sale_price), significantly improving normality and linearity in the residuals.
+```{r}
+# Check residual variance
+plot(model_trans, which = 3)
+
+# Apply square root transformation to stabilize variance
+data$total_bsmt_sf_sqrt <- sqrt(data$total_bsmt_sf)
+model_var_stable <- lm(sale_price_transformed ~ total_bsmt_sf_sqrt + lot_area + year_built, data = data)
+summary(model_var_stable)
+
+```
+Residual plots reveal a fanning pattern, indicating violation of constant variance. Then, we try to apply a square root transformation to the highly skewed predictor total_bsmt_sf stabilizes variance, as confirmed by more evenly distributed residuals in diagnostic plots.
+
+
+```{r}
+# Check VIF for multicollinearity
+vif(model_var_stable)
+
+# Remove highly collinear predictors if necessary
+model_reduced <- lm(sale_price_transformed ~ total_bsmt_sf_sqrt + lot_area, data = data)
+summary(model_reduced)
+```
+The Variance Inflation Factor (VIF) values for the predictors—total_bsmt_sf_sqrt (1.20), lot_area (1.04), and year_built (1.16)—are all well below the common threshold of 10, indicating that multicollinearity is not a concern in this model. This suggests that the predictors are not excessively correlated with each other, allowing the model to produce stable and reliable coefficient estimates. Given the low VIF values, no predictors need to be removed, confirming that the model’s variables are suitable for inclusion and contribute independently to explaining the variability in housing prices.
+
+```{r}
+# Calculate SST, SSR, and RSS
+sst <- sum((data$sale_price_transformed - mean(data$sale_price_transformed))^2)
+ssr <- sum((fitted(model_reduced) - mean(data$sale_price_transformed))^2)
+rss <- sum(residuals(model_reduced)^2)
+
+cat("SST:", sst, "\nSSR:", ssr, "\nRSS:", rss)
+```
+The decomposition of variability in the transformed housing prices (sale_price_transformed) reveals that the total variability (SST) is 5485.487, with 2005.904 (SSR) explained by the predictors in the model and 3479.583 (RSS) left unexplained as residual variance. This indicates that the model accounts for a significant portion of the total variability, as reflected by the SSR, but the substantial RSS suggests there is still variability in housing prices not captured by the included predictors. This breakdown emphasizes the model’s effectiveness in explaining key trends.
+
+```{r}
+# Cook's Distance
+cooksD <- cooks.distance(model_reduced)
+plot(cooksD, main = "Cook's Distance", type = "h")
+abline(h = 4/length(cooksD), col = "red")
+
+# Leverage Points
+leverage <- hatvalues(model_reduced)
+plot(leverage, main = "Leverage Points", type = "h")
+abline(h = 2*mean(leverage), col = "red")
+```
+
+Then for the outliers and influential points, We use Cook’s Distance and leverage to identify. Observations with high Cook’s Distance (e.g., above 4/n) are flagged as influential. Similarly, high leverage points (above 2 × mean leverage) suggest data points that significantly affect the regression line.
+
+```{r}
+# AIC and BIC
+AIC(model_reduced)
+BIC(model_reduced)
+
+# All subsets selection
+regsubsets_result <- regsubsets(sale_price_transformed ~ total_bsmt_sf_sqrt + lot_area + year_built, data = data, nvmax = 3)
+summary(regsubsets_result)
+
+# Plot model selection
+plot(regsubsets_result, scale = "adj_r2")
+```
+The final model with the smallest AIC and BIC is selected. The exhaustive search algorithm evaluated all possible combinations of predictors: total_bsmt_sf_sqrt, lot_area, and year_built. Using only total_bsmt_sf_sqrt achieves an adjusted R^2 of 0.55, the highest among single-predictor models. Adding lot_area improves the adjusted R^2 slightly but with diminishing returns, suggesting that the combination of total_bsmt_sf_sqrt and lot_area is optimal. Including year_built does not significantly improve the adjusted R^2, indicating it does not add meaningful predictive power.
+
+The AIC and BIC values for different models are:
+Model 1 (total_bsmt_sf_sqrt): AIC = 8776.325, BIC = 8800.221.
+Model 2 (total_bsmt_sf_sqrt + lot_area): AIC and BIC values are slightly lower than Model 1.
+Model 3 (total_bsmt_sf_sqrt + lot_area + year_built): AIC and BIC values increase, penalizing the addition of an insignificant predictor.
+Both AIC and BIC include worse results for model complexity, which means lower values indicate better models. In this case, Model 2 (total_bsmt_sf_sqrt + lot_area) achieves the lowest AIC and BIC values, making it the optimal choice.
+
 
 \newpage
 
