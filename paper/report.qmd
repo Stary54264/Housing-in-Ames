@@ -149,6 +149,8 @@ The analysis can provide deeper insights for stakeholders, including homeowners,
 
 # Preliminary Results {#sec-results}
 
+## Method
+
 ```{r}
 #| include: false
 #| warning: false
@@ -159,95 +161,93 @@ data$central_air <- as.factor(data$central_air)
 data$roof_style <- as.factor(data$roof_style)
 
 # Fit the linear model
-model <- lm(sale_price ~
+model1 <- lm(sale_price ~
               lot_area + overall_qual + year_built + roof_style +
               mas_vnr_area + total_bsmt_sf + central_air + garage_area +
               misc_val, data = data
 )
 
-# Take out the fitted values and residuals
-fit <- fitted(model)
-res <- resid(model)
+summary(model1)
 
-# Create data frames
-obs_res <- data.frame(obs = 1:length(res), res = res)
-fit_res <- data.frame(fit = fit, res = res)
+# Extract variables with  p < 0.001 (***) from 14 variables
+
+model2 <- lm(sale_price ~ 
+               lot_area + overall_qual + year_built + mas_vnr_area + 
+               total_bsmt_sf + garage_area + misc_val, data = data)
+
+summary(model2)
 ```
 
 ```{r}
-#| label: fig-res
-#| fig-cap: Residuals vs. Observation Index
-#| echo: false
-#| warning: false
-#| message: false
+# Perform stepwise selection starting with model1
+model3 <- stepAIC(model1, 
+                  scope = list(lower = ~1,  # Minimum model (intercept-only)
+                               upper = ~ lot_area + overall_qual + year_built + 
+                                        roof_style + mas_vnr_area + 
+                                        total_bsmt_sf + central_air + 
+                                        garage_area + misc_val),  # Full model
+                  direction = "both",  # Both forward and backward selection
+                  k = 2,  # Use AIC criterion with k = 2
+                  trace = TRUE)  # Display stepwise process
 
-# Plot residuals against observation index
-graph1 <- ggplot(obs_res, aes(x = obs, y = res)) +
-  geom_point() +
-  xlab("Predictor Index") +
-  ylab("Residuals") +
-  theme_minimal()
-
-# Plot residuals against fitted values
-graph2 <- ggplot(fit_res, aes(x = fit, y = res)) +
-  geom_point() +
-  xlab("Fitted Values") +
-  ylab("Residuals") +
-  theme_minimal()
-
-# Show 2 residual plots together
-graph1 + graph2
+# Display the summary of the final selected model
+summary(model3)
 ```
 
-From the left graph in @fig-res, we can see that residuals appear to be randomly scattered along a straight line, satisfying the uncorrelated errors assumption. In the right graph, all points are randomly scattered alone a straight line, satisfying the linearity assumption. However, there is a wider spread in residuals when fitted value increases. So, it violates the constant variance assumption. To solve this, we can use box-cox transformation in further analysis.
 
 ```{r}
-#| label: fig-qq
-#| fig-cap: Q-Q Plot
-#| echo: false
-#| warning: false
-#| message: false
-
-# Plot the Q-Q plot
-qqnorm(res)
-qqline(res, col = "red")
+# Do the F test
+anova(model3)
+## knitr::kable(anova(model3), cap = "ANOVA TABLE FOR F test")
 ```
 
-From @fig-qq, most of the points lies on the diagonal, satisfying the normality assumption.
 
 ```{r}
-#| label: fig-fit-resp
-#| fig-cap: Responses vs. Fitted Values
-#| echo: false
-#| warning: false
-#| message: false
-
-# Plot responses against fitted values
-plot(x = fit, y = data$sale_price,
-     xlab = "Fitted Values",
-     ylab = "Responses")
-
-abline(a = 0, b = 1, lty = 2)
+#Partial F test
+model4 = lm(sale_price ~ lot_area + overall_qual + year_built + mas_vnr_area, data = data)
+anova(model3, model4)
+## knitr::kable(anova(model3, model4), cap = "ANOVA TABLE FOR partial F test")
 ```
 
-From @fig-fit-resp, we can see that all points are randomly scattered alone the diagonal, which implies that the mean responses are a single function of a linear combination.
+
+```{r,message=FALSE,echo=FALSE,warning=FALSE,fig.height=3}
+
+# Extract residuals of model 3
+residuals <- resid(model3)
+# Check condition 1 and condition 2
+## Condition 1
+plot(data$sale_price ~ fitted(model3), main = "Y versus Y-hat", xlab = "Y-hat", ylab = "Y")
+abline(a = 0, b = 1)
+lines(lowess(data$sale_price ~ fitted (model3)), lty = 2)
+## Condition 2
+data2 = data.frame(data$sale_price, data$lot_area, data$overall_qual, data$year_built,
+                   data$mas_vnr_area, data$total_bsmt_sf, data$garage_area, data$misc_val)
+pairs(data2)
+
+
+
+```
+
 
 ```{r}
-#| label: fig-pair
-#| fig-cap: Pairwise Scatterplots of Predictors
-#| echo: false
-#| warning: false
-#| message: false
-
-# Plot predictors against each other
-pairs(data[, 2:9])
+# plot wih y-hat
+par(mfrow = c(2,2))
+plot(model3, 1)
+plot(model3, 2)
+plot(model3, 3)
+plot(model3, 4)
 ```
-@fig-pair shows no significant curves, which indicates that every predictor is related to each other in no more complicated way than linearly.
 
-Although the constant variance assumption is violated, we could still gain insights from the analysis. From the analysis above, we can find out that when every predictor is 0, `roof_style` is "Flat", and `central_air` is "N", the expected value of `sale_price` would be -426801.9. The numerical predictors all have a positive impact on the expected value of `sale_price`, except `misc_val`. With `cental_air`, the expected value of `sale_price` would decrease by 3355.89. Different `roof_type` would give different increase in the expected value of `sale_price`. Apparently, increasing the area of the house would make it more expensive, while allowing the air conditioner to be centrally controlled would make it cheaper.
 
-The results of this preliminary analysis are consistent with findings in the literature, which indicates that some aspects of a property, such as `lot_area`, `overall_qual`, and `garage_area`, have a impact on `sale_price`. This is because that the predictors we use are the most evident variables that affect the price of the houses.
+```{r}
+#Determine whether there are leverage points
+n <- nrow(data)
+p <- length(coef(model3))-1
+# leverage cutoff
+h_cut <- 2*(p+1)/n
+which(hatvalues(model3) > h_cut)
 
+```
 
 \newpage
 
