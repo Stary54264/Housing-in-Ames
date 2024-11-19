@@ -18,7 +18,6 @@ bibliography: references.bib
 library(tidyverse)
 library(knitr)
 library(patchwork)
-library(ggplot2)
 library(MASS)
 library(lmtest)
 ```
@@ -54,11 +53,11 @@ data <- read_csv(here::here("data", "cleaned_data.csv"))
 #| message: false
 
 # Separate the dataset into two parts for better visualization
-data1 <- data |> select(
+data1 <- data |> dplyr::select(
   sale_price, lot_area, overall_qual, year_built, roof_style
 )
 
-data2 <- data |> select(
+data2 <- data |> dplyr::select(
   mas_vnr_area, total_bsmt_sf, central_air, garage_area, misc_val
 )
 ```
@@ -120,7 +119,7 @@ In this analysis, we will use these packages in R: `tidyverse` (@tidyverse), `kn
 
 # Generate a dataset that only consists numerical data
 data_numerical <- data |>
-  select(sale_price, lot_area, overall_qual, year_built,
+  dplyr::select(sale_price, lot_area, overall_qual, year_built,
          mas_vnr_area, total_bsmt_sf, garage_area, misc_val
   )
 ```
