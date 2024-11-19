@@ -18,6 +18,9 @@ bibliography: references.bib
 library(tidyverse)
 library(knitr)
 library(patchwork)
+library(ggplot2)
+library(MASS)
+library(lmtest)
 ```
 
 \newpage
@@ -152,7 +155,8 @@ The analysis can provide deeper insights for stakeholders, including homeowners,
 ## Method
 
 ```{r}
-#| include: false
+
+#| echo: false
 #| warning: false
 #| message: false
 
@@ -167,7 +171,7 @@ model1 <- lm(sale_price ~
               misc_val, data = data
 )
 
-summary(model1)
+#summary(model1)
 
 # Extract variables with  p < 0.001 (***) from 14 variables
 
@@ -175,10 +179,8 @@ model2 <- lm(sale_price ~
                lot_area + overall_qual + year_built + mas_vnr_area + 
                total_bsmt_sf + garage_area + misc_val, data = data)
 
-summary(model2)
-```
+#summary(model2)
 
-```{r}
 # Perform stepwise selection starting with model1
 model3 <- stepAIC(model1, 
                   scope = list(lower = ~1,  # Minimum model (intercept-only)
@@ -189,72 +191,126 @@ model3 <- stepAIC(model1,
                   direction = "both",  # Both forward and backward selection
                   k = 2,  # Use AIC criterion with k = 2
                   trace = TRUE)  # Display stepwise process
-
-# Display the summary of the final selected model
-summary(model3)
+#summary(model3)
 ```
+Model 3, derived through stepwise selection (stepAIC), is the most optimal model compared to Models 1 and 2. It achieves a similar adjusted R-squared (0.7543) to Model 1 but with fewer predictors and a lower AIC (61515.11), indicating a better balance between explanatory power and simplicity. While Model 1 includes non-significant variables, and Model 2 uses only the most significant ones, Model 3 refines the selection to include only the predictors that optimize the model’s performance, making it more efficient and interpretable.
 
 
 ```{r}
-# Do the F test
-anova(model3)
-## knitr::kable(anova(model3), cap = "ANOVA TABLE FOR F test")
+#| echo: false
+#| warning: false
+#| message: false
+
+# Set up 2x2 plot layout
+par(mfrow = c(2, 2))
+# 1. Linearity Assumption
+plot(model3$fitted.values, residuals(model3),
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted Values")
+abline(h = 0, col = "red", lty = 2)
+# Residuals should show no distinct pattern.
+
+# 2. Normality Assumption (Q-Q Plot)
+qqnorm(residuals(model3), main = "Normal Q-Q Plot")
+qqline(residuals(model3), col = "red", lty = 2)
+# Points should lie close to the line for normality.
+
+# 3. Uncorrelated errors (dwtest)
+dw_test <- dwtest(model3)
+print(dw_test)
+
+# 4. Constant Variance (Residuals vs Fitted)
+plot(model3$fitted.values, abs(residuals(model3)),
+     xlab = "Fitted Values", ylab = "|Residuals|",
+     main = "Scale-Location Plot")
+abline(h = mean(abs(residuals(model3))), col = "red", lty = 2)
+# Look for no increasing or decreasing pattern.
+
 ```
 
+The diagnostic analysis shows that the assumptions of linearity and constant variance are not violated, as evidenced by the residuals vs. fitted plot and scale-location plot. However, the Durbin-Watson test indicates significant positive autocorrelation (p < 2.2e-16), violating the uncorrelated errors assumption. Additionally, the Q-Q plot reveals some deviations in the tails, suggesting a potential violation of the normality assumption. Addressing the autocorrelation issue and considering adjustments for normality may improve the model's validity.
 
 ```{r}
-#Partial F test
-model4 = lm(sale_price ~ lot_area + overall_qual + year_built + mas_vnr_area, data = data)
-anova(model3, model4)
-## knitr::kable(anova(model3, model4), cap = "ANOVA TABLE FOR partial F test")
+# 1. Addressing Autocorrelation by Including Lagged Residuals
+# Generate lagged residuals
+residuals_lagged <- c(NA, head(residuals(model3), -1))  # Lagged residuals
+data$residuals_lagged <- residuals_lagged
+
+# Refit model by adding lagged residuals
+model4 <- lm(sale_price ~ lot_area + overall_qual + year_built + mas_vnr_area +
+               total_bsmt_sf + garage_area + misc_val + residuals_lagged,
+             data = data, na.action = na.exclude)
+
+# Check for autocorrelation again
+dw_test_model4 <- dwtest(model4)
+print(dw_test_model4)  # Improved DW indicates less autocorrelation
+
+# 2. Addressing Normality with Box-Cox Transformation
+# Box-Cox Transformation to find the best lambda
+boxcox_result <- boxcox(model3, lambda = seq(-2, 2, by = 0.1))  # Test range of lambda
+lambda_optimal <- boxcox_result$x[which.max(boxcox_result$y)]  # Optimal lambda
+print(lambda_optimal)
+
+# Apply the Box-Cox transformation to the response variable
+if (lambda_optimal == 0) {
+  data$sale_price_transformed <- log(data$sale_price)
+} else {
+  data$sale_price_transformed <- (data$sale_price^lambda_optimal - 1) / lambda_optimal
+}
+
+# Refit the model with transformed response
+model5 <- lm(sale_price_transformed ~ lot_area + overall_qual + year_built +
+               mas_vnr_area + total_bsmt_sf + garage_area + misc_val,
+             data = data)
+
+# Diagnostic plots for the new model
+par(mfrow = c(2, 2))
+plot(model5)
+par(mfrow = c(1, 1))
 ```
-
-
-```{r,message=FALSE,echo=FALSE,warning=FALSE,fig.height=3}
-
-# Extract residuals of model 3
-residuals <- resid(model3)
-# Check condition 1 and condition 2
-## Condition 1
-plot(data$sale_price ~ fitted(model3), main = "Y versus Y-hat", xlab = "Y-hat", ylab = "Y")
-abline(a = 0, b = 1)
-lines(lowess(data$sale_price ~ fitted (model3)), lty = 2)
-## Condition 2
-data2 = data.frame(data$sale_price, data$lot_area, data$overall_qual, data$year_built,
-                   data$mas_vnr_area, data$total_bsmt_sf, data$garage_area, data$misc_val)
-pairs(data2)
-
-
-
-```
-
-
-```{r}
-# plot wih y-hat
-par(mfrow = c(2,2))
-plot(model3, 1)
-plot(model3, 2)
-plot(model3, 3)
-plot(model3, 4)
-```
-
-
-```{r}
-#Determine whether there are leverage points
-n <- nrow(data)
-p <- length(coef(model3))-1
-# leverage cutoff
-h_cut <- 2*(p+1)/n
-which(hatvalues(model3) > h_cut)
-
-```
-
+To address violations of assumptions, a lagged residual term was added to mitigate autocorrelation, improving the Durbin-Watson statistic. Additionally, a Box-Cox transformation was applied to normalize the response variable, with an optimal λ determined through analysis. These adjustments ensure the model aligns better with linear regression assumptions and produces more reliable inferences.
 \newpage
 
 \appendix
 
 # Appendix
+## Residual plot of predictors
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
 
+
+# Define the target variable and continuous predictors
+target <- "sale_price"
+continuous_predictors <- c("lot_area", "overall_qual", "year_built", 
+                           "mas_vnr_area", "total_bsmt_sf", "garage_area", "misc_val")
+
+# Loop through each continuous predictor and create residual plots
+for (predictor in continuous_predictors) {
+  # Fit a linear regression model
+  model <- lm(data[[target]] ~ data[[predictor]], data = data)
+  
+  # Extract residuals and create a data frame for plotting
+  residuals_data <- data.frame(
+    Predictor = data[[predictor]],
+    Residuals = resid(model)
+  )
+  
+  # Create the residual plot
+  plot <- ggplot(residuals_data, aes(x = Predictor, y = Residuals)) +
+    geom_point(alpha = 0.7) +
+    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+    labs(title = paste("Residual Plot:", predictor),
+         x = predictor,
+         y = "Residuals") +
+    theme_minimal()
+  
+  # Display the plot
+  print(plot)
+}
+
+```
 ## Contributions {#sec-contribution}
 
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
