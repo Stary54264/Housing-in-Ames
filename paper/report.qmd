@@ -34,289 +34,37 @@ We found several peer-reviewed articles that focus on similar problems with this
 
 In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
 
-# Data Description {#sec-data}
+# Method
 
-```{r}
-#| include: false
-#| warning: false
-#| message: false
+# Results
 
-# Read data from cleaned data file
-data <- read_csv(here::here("data", "cleaned_data.csv"))
-```
+# Conclusion and Limitations
 
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-# Separate the dataset into two parts for better visualization
-data1 <- data |> dplyr::select(
-  sale_price, lot_area, overall_qual, year_built, roof_style
-)
-
-data2 <- data |> dplyr::select(
-  mas_vnr_area, total_bsmt_sf, central_air, garage_area, misc_val
-)
-```
-
-```{r}
-#| label: tbl-data-1
-#| tbl-cap: Preview of Data (First Half)
-#| echo: false
-#| warning: false
-#| message: false
-
-# Visualize the first part of the dataset
-kable(head(data1), format = "markdown")
-```
-
-```{r}
-#| label: tbl-data-2
-#| tbl-cap: Preview of Data (Second Half)
-#| echo: false
-#| warning: false
-#| message: false
-
-# Visualize the second part of the dataset
-kable(head(data2), format = "markdown")
-```
-
-The Ames Housing dataset (@tbl-data-1, @tbl-data-2) was sourced from the `AmesHousing` package (@ameshousing) in R (@citeR). It was originally compiled by the Ames City Assessor's Office through a comprehensive data dump of property tax records from 2006 to 2010, and it aimed to document residential property sales (@ames). The dataset was initially designed for property tax assessments and general valuation, focusing on property characteristics such as lot area, the year built, and sale price. In contrast, this research aims to analyze how various property features influence house prices in Ames.
-
-The dataset consists of 2930 observations and 82 variables relevant to understanding housing market dynamics. After cleaning, we selected 1 response variable, `sale_price`, and 9 predictor variables: `lot_area`, `overall_qual`, `year_built`, `roof_style`, `mas_vnr_area`, `total_bsmt_sf`, `central_air`, `garage_area`, and `misc_val`.
-
-- `sale_price`: Price of the house
-
-- `lot_area`: Lot size
-
-- `overall_qual`: Rates the overall material and finish of the house
-
-- `year_built`: Original construction date
-
-- `roof_style`: Type of roof
-
-- `mas_vnr_area`: Masonry veneer area
-
-- `total_bsmt_sf`: Total area of basement
-
-- `central_air`: Central air conditioning
-
-- `garage_area`: Size of garage
-
-- `misc_val`: Value of miscellaneous feature
-
-These predictor variables all show the quality of the house, which affects the price of the house directly. So, we believe there is a linear relationship between these predictor variables and the response variable.
-
-In this analysis, we will use these packages in R: `tidyverse` (@tidyverse), `knitr` (@knitr), and `patchwork` (@patchwork).
-
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-# Generate a dataset that only consists numerical data
-data_numerical <- data |>
-  dplyr::select(sale_price, lot_area, overall_qual, year_built,
-         mas_vnr_area, total_bsmt_sf, garage_area, misc_val
-  )
-```
-
-```{r}
-#| label: tbl-summary
-#| tbl-cap: Summarize Table of Numerical Data
-#| echo: false
-#| warning: false
-#| message: false
-
-# Generate a summarize table
-summary_table <- data.frame(
-  Mean = round(apply(data_numerical, 2, mean), 2),
-  Standard_Deviation = round(apply(data_numerical, 2, sd), 2),
-  Median = round(apply(data_numerical, 2, median), 2)
-)
-
-kable(summary_table, format = "markdown")
-```
-
-From the summary table (@tbl-summary), we can see that `mas_vnr_area` and `misc_val` might be right-skewed since their mean is a lot greater than their median. An interesting point is that the standard deviation of `misc_val` is quite large, which indicate that houses in Ames might differs significantly in miscellaneous features. By analyzing these variables, we aim to provide insights into how specific property characteristics affect housing prices in Ames.
-
-# Ethics Discussion {#sec-ethics}
-
-Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to only keep some necessary key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. More detailed information about source of data is described in @sec-data. The cleaned data we are using includes some detailed information about housing characteristics, but does not contain personal identifiers.
-
-The analysis can provide deeper insights for stakeholders, including homeowners, potential buyers, real estate agents, and policymakers, to make better decisions about buying, selling and investing in real estate. The Ames housing dataset has been used widely, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
-
-The use of automated selection tools in academic research brings both opportunities and ethical challenges. Automated tools can significantly speed up research processes, but their use must be transparent, including acknowledging the specific tools and algorithms employed, as well as their limitations. Ensuring fairness and avoiding skewed results require careful selection of training data and ongoing monitoring to detect and mitigate biases presented in AI training data. While automated tools can enhance productivity, they should not replace human judgment. By addressing these ethical considerations, we can leverage the benefits of automated selection tools while maintaining the integrity and fairness during our research practices. 
-
-# Preliminary Results {#sec-results}
-
-## Method
-
-```{r}
-
-#| echo: false
-#| warning: false
-#| message: false
-
-# Convert variables to factors
-data$central_air <- as.factor(data$central_air)
-data$roof_style <- as.factor(data$roof_style)
-
-# Fit the linear model
-model1 <- lm(sale_price ~
-              lot_area + overall_qual + year_built + roof_style +
-              mas_vnr_area + total_bsmt_sf + central_air + garage_area +
-              misc_val, data = data
-)
-
-#summary(model1)
-
-# Extract variables with  p < 0.001 (***) from 14 variables
-
-model2 <- lm(sale_price ~ 
-               lot_area + overall_qual + year_built + mas_vnr_area + 
-               total_bsmt_sf + garage_area + misc_val, data = data)
-
-#summary(model2)
-
-# Perform stepwise selection starting with model1
-model3 <- stepAIC(model1, 
-                  scope = list(lower = ~1,  # Minimum model (intercept-only)
-                               upper = ~ lot_area + overall_qual + year_built + 
-                                        roof_style + mas_vnr_area + 
-                                        total_bsmt_sf + central_air + 
-                                        garage_area + misc_val),  # Full model
-                  direction = "both",  # Both forward and backward selection
-                  k = 2,  # Use AIC criterion with k = 2
-                  trace = TRUE)  # Display stepwise process
-#summary(model3)
-```
-Model 3, derived through stepwise selection (stepAIC), is the most optimal model compared to Models 1 and 2. It achieves a similar adjusted R-squared (0.7543) to Model 1 but with fewer predictors and a lower AIC (61515.11), indicating a better balance between explanatory power and simplicity. While Model 1 includes non-significant variables, and Model 2 uses only the most significant ones, Model 3 refines the selection to include only the predictors that optimize the model’s performance, making it more efficient and interpretable.
-
-
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-
-# Set up 2x2 plot layout
-par(mfrow = c(2, 2))
-# 1. Linearity Assumption
-plot(model3$fitted.values, residuals(model3),
-     xlab = "Fitted Values", ylab = "Residuals",
-     main = "Residuals vs Fitted Values")
-abline(h = 0, col = "red", lty = 2)
-# Residuals should show no distinct pattern.
-
-# 2. Normality Assumption (Q-Q Plot)
-qqnorm(residuals(model3), main = "Normal Q-Q Plot")
-qqline(residuals(model3), col = "red", lty = 2)
-# Points should lie close to the line for normality.
-
-# 3. Uncorrelated errors (dwtest)
-dw_test <- dwtest(model3)
-print(dw_test)
-
-# 4. Constant Variance (Residuals vs Fitted)
-plot(model3$fitted.values, abs(residuals(model3)),
-     xlab = "Fitted Values", ylab = "|Residuals|",
-     main = "Scale-Location Plot")
-abline(h = mean(abs(residuals(model3))), col = "red", lty = 2)
-# Look for no increasing or decreasing pattern.
-
-```
-
-The diagnostic analysis shows that the assumptions of linearity and constant variance are not violated, as evidenced by the residuals vs. fitted plot and scale-location plot. However, the Durbin-Watson test indicates significant positive autocorrelation (p < 2.2e-16), violating the uncorrelated errors assumption. Additionally, the Q-Q plot reveals some deviations in the tails, suggesting a potential violation of the normality assumption. Addressing the autocorrelation issue and considering adjustments for normality may improve the model's validity.
-
-```{r}
-# 1. Addressing Autocorrelation by Including Lagged Residuals
-# Generate lagged residuals
-residuals_lagged <- c(NA, head(residuals(model3), -1))  # Lagged residuals
-data$residuals_lagged <- residuals_lagged
-
-# Refit model by adding lagged residuals
-model4 <- lm(sale_price ~ lot_area + overall_qual + year_built + mas_vnr_area +
-               total_bsmt_sf + garage_area + misc_val + residuals_lagged,
-             data = data, na.action = na.exclude)
-
-# Check for autocorrelation again
-dw_test_model4 <- dwtest(model4)
-print(dw_test_model4)  # Improved DW indicates less autocorrelation
-
-# 2. Addressing Normality with Box-Cox Transformation
-# Box-Cox Transformation to find the best lambda
-boxcox_result <- boxcox(model3, lambda = seq(-2, 2, by = 0.1))  # Test range of lambda
-lambda_optimal <- boxcox_result$x[which.max(boxcox_result$y)]  # Optimal lambda
-print(lambda_optimal)
-
-# Apply the Box-Cox transformation to the response variable
-if (lambda_optimal == 0) {
-  data$sale_price_transformed <- log(data$sale_price)
-} else {
-  data$sale_price_transformed <- (data$sale_price^lambda_optimal - 1) / lambda_optimal
-}
-
-# Refit the model with transformed response
-model5 <- lm(sale_price_transformed ~ lot_area + overall_qual + year_built +
-               mas_vnr_area + total_bsmt_sf + garage_area + misc_val,
-             data = data)
-
-# Diagnostic plots for the new model
-par(mfrow = c(2, 2))
-plot(model5)
-par(mfrow = c(1, 1))
-```
-To address violations of assumptions, a lagged residual term was added to mitigate autocorrelation, improving the Durbin-Watson statistic. Additionally, a Box-Cox transformation was applied to normalize the response variable, with an optimal λ determined through analysis. These adjustments ensure the model aligns better with linear regression assumptions and produces more reliable inferences.
 \newpage
 
 \appendix
 
 # Appendix
-## Residual plot of predictors
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
 
+## Detailed Process of Checking Assumptions
 
-# Define the target variable and continuous predictors
-target <- "sale_price"
-continuous_predictors <- c("lot_area", "overall_qual", "year_built", 
-                           "mas_vnr_area", "total_bsmt_sf", "garage_area", "misc_val")
+## Ethics Discussion
 
-# Loop through each continuous predictor and create residual plots
-for (predictor in continuous_predictors) {
-  # Fit a linear regression model
-  model <- lm(data[[target]] ~ data[[predictor]], data = data)
-  
-  # Extract residuals and create a data frame for plotting
-  residuals_data <- data.frame(
-    Predictor = data[[predictor]],
-    Residuals = resid(model)
-  )
-  
-  # Create the residual plot
-  plot <- ggplot(residuals_data, aes(x = Predictor, y = Residuals)) +
-    geom_point(alpha = 0.7) +
-    geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
-    labs(title = paste("Residual Plot:", predictor),
-         x = predictor,
-         y = "Residuals") +
-    theme_minimal()
-  
-  # Display the plot
-  print(plot)
-}
+Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to only keep some necessary key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. The cleaned data we are using includes some detailed information about housing characteristics, but does not contain personal identifiers.
 
-```
-## Contributions {#sec-contribution}
+The Ames housing dataset has been used widely, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
+
+The use of automated selection tools in academic research brings both opportunities and ethical challenges. Automated tools can significantly speed up research processes, but their use must be transparent, including acknowledging the specific tools and algorithms employed, as well as their limitations.
+
+Ensuring fairness and avoiding skewed results require careful selection of training data and ongoing monitoring to detect and mitigate biases presented in AI training data. While automated tools can enhance productivity, they should not replace human judgment. By addressing these ethical considerations, we can leverage the benefits of automated selection tools while maintaining the integrity and fairness during our research practices.
+
+## Contributions
 
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
 
-- Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; downloaded data for setting up the linear regression model; cleaned data to make further analysis easier; introduced the dataset; made the summary table; created file for R code; made the reference list; revised group member's work; combined group member's work together.
+- Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; refined the model by model selection tools; checked multicollinearity of the models; made the reference list; revised group member's work; combined group member's work together.
 
-- Siyuan Lu: Set research question and hypothesis; searched and read peer-reviewed articles; introduced the project; checked data ethics.
+- Siyuan Lu: Set research question; searched and read peer-reviewed articles; introduced the project; checked data ethics.
 
 - Yi Tang: Built linear regression model; checked conditions for performing linear regression; checked extra conditions for performing multiple linear regression; showed the results of the linear regression model.
 
