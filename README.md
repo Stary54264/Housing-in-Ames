@@ -18,9 +18,9 @@ The repo is structured as:
 ## Part 3
 
 **Report - Introduction**
--   [ ] The research question is stated with explicit mention of the response and predictors (or common predictor groups) in general (non-technical) terms, and it is explicitly mentioned why this question/topic is important/relevant.
--   [ ] The results of at least three peer-reviewed academic journal articles are used to describe what is already known about the topic and how this knowledge will be integrated into the study.
--   [ ] An appropriate justification is given on how a linear model can be used to answer this research question and whether the focus will be on interpretability/description or prediction.
+-   [X] The research question is stated with explicit mention of the response and predictors (or common predictor groups) in general (non-technical) terms, and it is explicitly mentioned why this question/topic is important/relevant.
+-   [X] The results of at least three peer-reviewed academic journal articles are used to describe what is already known about the topic and how this knowledge will be integrated into the study.
+-   [X] An appropriate justification is given on how a linear model can be used to answer this research question and whether the focus will be on interpretability/description or prediction.
 
 **Report - Methods**
 -   [ ] How a final model for answering the research question is developed using the course material is explicitly and logically outlined.
@@ -71,9 +71,9 @@ The repo is structured as:
 -   [ ] The poster is logical and understandable without the need for additional or supplemental materials (i.e. can be understood without reading the full report).
 
 **Ethics Discussion**
--   [ ] Answer meets the minimum and maximum word count.
--   [ ] Response makes a reasonably clear attempt to argue for its conclusion.
--   [ ] Answer refers to some concepts and ideas found in the second ethics module.
+-   [X] Answer meets the minimum and maximum word count.
+-   [X] Response makes a reasonably clear attempt to argue for its conclusion.
+-   [X] Answer refers to some concepts and ideas found in the second ethics module.
 
 **Editing Demonstration**
 -   [ ] The editing technique employed was stated and a reason for this choice was provided.
