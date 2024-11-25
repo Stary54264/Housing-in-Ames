@@ -34,11 +34,11 @@ We found several peer-reviewed articles that focus on similar problems with this
 
 In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
 
-# Method
+# Method (500)
 
-# Results
+# Results (750)
 
-# Conclusion and Limitations
+# Conclusion and Limitations (350)
 
 \newpage
 
