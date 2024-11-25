@@ -7,7 +7,7 @@ thanks: "Code and data supporting this proposal is available at: <https://github
 format: pdf
 number-sections: true
 toc: true
-bibliography: references.bib
+bibliography: references_paper.bib
 ---
 
 ```{r}
@@ -26,14 +26,13 @@ library(lmtest)
 
 # Introduction
 
-The primary research question we aim to answer is: What are the key factors that significantly influence house prices in Ames from 2006 to 2010? Sale price of the house is the response variable. Predictor variables include area, overall quality index, year of construction, house facilities, and value of miscellaneous feature. By identifying and analyzing the factors that significantly influence house prices, our research can offer practical recommendations for various stakeholders, ultimately contributing to a more efficient and transparent real estate market in Ames. Similar analysis can be done to other cities to improve economic insights and investment decisions. 
+The research question we aim to answer is: what are the factors that influence house prices in Ames from 2006 to 2010? We would set up a linear regression model to answer this with house prices as the outcome (response). Factors that might affect the outcome (predictors) include area, quality, year of construction, facilities, etc.
 
-We will test whether there is a statistically significant linear relationship between certain property characteristics (predictors) and the sale price of houses (response) using linear regression. We use residual plots and a Q-Q plot to check the assumption. Linear regression provides coefficients that quantify the relationship between each predictor and the response variable, making it easier to interpret the impact of each factor alone on house prices. Our primary goal is to understand the impact of each predictor on house prices, so the focus should be on interpretability instead of precision.
+By setting up the model, we can identify the factors that influence house prices, since linear regression allows us to quantify the relationship between predictors and responses, making it easier to interpret the impact of each factor alone on house prices. Our primary goal is understanding the factors that influence historical house prices, so our focus would be on description rather than prediction.
 
 We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" concludes that housing prices are negatively correlated with completion costs, land acquisition prices, residents’ disposable income, and population density (@influencing). This article provides some characteristics other than what we use that can also influence house price in national scope.
 
-In "Dynamic Relationships Between Commodity Prices and Local Housing Market", this research examines the significant nonlinear relationship between agricultural commodity prices and the local housing market (@dynamic). The research "Non-Linear Relationships Between House Size and Price" clarifies the nonlinear relationships between housing size and price (@size). These two researches explain another aspect, a non-linear relationship, between house price and other factors, providing more comprehensive information about house market for decision making of the developers, home purchasers, real estate appraisers, and the governments. 
-
+In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
 
 # Data Description {#sec-data}
 
