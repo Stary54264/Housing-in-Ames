@@ -188,72 +188,72 @@ pairs(data[, 2:9])
 
 # Set up 2x2 plot layout
 par(mfrow = c(2, 2))
-# 1. Linearity Assumption
-plot(model3$fitted.values, residuals(model3),
+
+# Take out the fitted values and residuals
+fit <- fitted(model1)
+res <- resid(model1)
+
+# Create data frames
+obs_res <- data.frame(obs = 1:length(res), res = res)
+fit_res <- data.frame(fit = fit, res = res)
+
+# 1. Linearity Assumption and Constant Variance assumption
+# Residuals vs Fitted Values plot
+plot(fit, res,
      xlab = "Fitted Values", ylab = "Residuals",
      main = "Residuals vs Fitted Values")
 abline(h = 0, col = "red", lty = 2)
-# Residuals should show no distinct pattern.
 
 # 2. Normality Assumption (Q-Q Plot)
-qqnorm(residuals(model3), main = "Normal Q-Q Plot")
-qqline(residuals(model3), col = "red", lty = 2)
-# Points should lie close to the line for normality.
+qqnorm(res, main = "Normal Q-Q Plot")
+qqline(res, col = "red", lty = 2)
 
-# 3. Uncorrelated errors (dwtest)
-dw_test <- dwtest(model3)
-print(dw_test)
+# 3. Uncorrelated Errors Assumption
+# Residuals vs Predictor Index to check for independence
+plot(1:length(res), res,
+     xlab = "Predictor Index", ylab = "Residuals",
+     main = "Residuals vs Predictor Index")
+abline(h = 0, col = "red", lty = 2)
 
-# 4. Constant Variance (Residuals vs Fitted)
-plot(model3$fitted.values, abs(residuals(model3)),
-     xlab = "Fitted Values", ylab = "|Residuals|",
-     main = "Scale-Location Plot")
-abline(h = mean(abs(residuals(model3))), col = "red", lty = 2)
-# Look for no increasing or decreasing pattern.
 
 ```
 
-The diagnostic analysis shows that the assumptions of linearity and constant variance are not violated, as evidenced by the residuals vs. fitted plot and scale-location plot. However, the Durbin-Watson test indicates significant positive autocorrelation (p < 2.2e-16), violating the uncorrelated errors assumption. Additionally, the Q-Q plot reveals some deviations in the tails, suggesting a potential violation of the normality assumption. Addressing the autocorrelation issue and considering adjustments for normality may improve the model's validity.
+The model1 violates the linearity assumption as the residuals vs. fitted values plot shows non-random patterns, indicating an incomplete capture of the linear relationship. The normality assumption is also violated because the Q-Q plot reveals deviations from the diagonal line, especially at the tails, indicating non-normal residuals. The independence assumption is satisfied, as there is no systematic trend in the residuals vs. observation order plot, suggesting the residuals are randomly distributed. However, the constant variance assumption is violated, with residuals showing increased spread at higher fitted values, suggesting heteroskedasticity.
 
 ```{r}
-# 1. Addressing Autocorrelation by Including Lagged Residuals
-# Generate lagged residuals
-residuals_lagged <- c(NA, head(residuals(model3), -1))  # Lagged residuals
-data$residuals_lagged <- residuals_lagged
-
-# Refit model by adding lagged residuals
-model4 <- lm(sale_price ~ lot_area + overall_qual + year_built + mas_vnr_area +
-               total_bsmt_sf + garage_area + misc_val + residuals_lagged,
-             data = data, na.action = na.exclude)
-
-# Check for autocorrelation again
-dw_test_model4 <- dwtest(model4)
-print(dw_test_model4)  # Improved DW indicates less autocorrelation
-
-# 2. Addressing Normality with Box-Cox Transformation
-# Box-Cox Transformation to find the best lambda
-boxcox_result <- boxcox(model3, lambda = seq(-2, 2, by = 0.1))  # Test range of lambda
-lambda_optimal <- boxcox_result$x[which.max(boxcox_result$y)]  # Optimal lambda
-print(lambda_optimal)
-
-# Apply the Box-Cox transformation to the response variable
-if (lambda_optimal == 0) {
-  data$sale_price_transformed <- log(data$sale_price)
-} else {
-  data$sale_price_transformed <- (data$sale_price^lambda_optimal - 1) / lambda_optimal
-}
-
-# Refit the model with transformed response
-model5 <- lm(sale_price_transformed ~ lot_area + overall_qual + year_built +
-               mas_vnr_area + total_bsmt_sf + garage_area + misc_val,
-             data = data)
-
-# Diagnostic plots for the new model
+# Set up 2x2 plot layout
 par(mfrow = c(2, 2))
-plot(model5)
-par(mfrow = c(1, 1))
+
+# Refit the model using transformed response
+model2 <- lm(log(sale_price) ~
+              lot_area + overall_qual + year_built + roof_style +
+              mas_vnr_area + total_bsmt_sf + central_air + garage_area +
+              misc_val, data = data)
+
+# Take out the fitted values and residuals for the new model
+fit2 <- fitted(model2)
+res2 <- resid(model2)
+
+# 1. Linearity Assumption and Constant Variance assumption
+# Residuals vs Fitted Values plot
+plot(fit2, res2,
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted Values (Transformed)")
+abline(h = 0, col = "red", lty = 2)
+
+# 2. Normality Assumption (Q-Q Plot)
+qqnorm(res2, main = "Normal Q-Q Plot (Transformed)")
+qqline(res2, col = "red", lty = 2)
+
+# 3. Uncorrelated Errors Assumption
+# Residuals vs Observation Order to check for independence
+plot(1:length(res2), res2,
+     xlab = "Predictor Index", ylab = "Residuals",
+     main = "Residuals vs Predictor Index (Transformed)")
+abline(h = 0, col = "red", lty = 2)
+
 ```
-To address violations of assumptions, a lagged residual term was added to mitigate autocorrelation, improving the Durbin-Watson statistic. Additionally, a Box-Cox transformation was applied to normalize the response variable, with an optimal λ determined through analysis. These adjustments ensure the model aligns better with linear regression assumptions and produces more reliable inferences.
+After applying the log transformation to the response variable, the model assumptions have improved considerably. The residuals vs. fitted values plot now shows a more random scatter around zero, suggesting better linearity and more consistent variance, addressing the heteroskedasticity issue. The Q-Q plot indicates that residuals align more closely with the normal distribution, with reduced deviations at the tails. Additionally, the residuals vs. observation order plot confirms that the independence assumption remains satisfied. Overall, the log transformation has successfully mitigated the violations, making the model assumptions more reliable for analysis and inference.
 \newpage
 
 \appendix
