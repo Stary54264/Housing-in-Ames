@@ -18,8 +18,8 @@ bibliography: references_paper.bib
 library(tidyverse)
 library(knitr)
 library(patchwork)
-library(MASS)
-library(lmtest)
+library(car)
+library(leaps)
 ```
 
 \newpage
@@ -36,6 +36,106 @@ In "Dynamic Relationships Between Commodity Prices and Local Housing Market", th
 
 # Method (500)
 
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Read Data
+data <- read_csv(here::here("data", "cleaned_data.csv"))
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Fit Model 1
+model1 <- lm(sale_price ~
+               lot_area + overall_qual + year_built + roof_style +
+               mas_vnr_area + total_bsmt_sf + central_air + garage_area +
+               misc_val, data = data)
+
+# Take out Fitted Values and Residuals
+fit1 <- fitted(model1)
+res1 <- resid(model1)
+```
+
+Our process begins by developing an initial multiple linear regression model (Model 1) using selected predictors. This model serves as the baseline for evaluating the relationship between the predictors and the response variable. It also provides the foundation for subsequent diagnostic checks and refinements.
+
+After building Model 1, the two conditions (conditional mean response and conditional mean predictors) and four assumptions (linearity, uncorrelated errors, constant variance, and normality) are verified. Graphical diagnostics are included in @sec-assumption.
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Remove Categorical Predictors
+box_cox_data <- data |>
+  select(-roof_style, -central_air, -mas_vnr_area, -misc_val) |>
+  filter_all(all_vars(. != 0))
+
+# Get Suitable Powers
+summary(powerTransform(cbind(box_cox_data[, 1:6])))
+
+# Do Box-Cox Transformation
+new_data <- data |>
+  select(-roof_style, -central_air) |>
+  mutate(sale_price = log(sale_price),
+         lot_area = log(lot_area),
+         overall_qual = overall_qual ^ 0.8,
+         year_built = year_built ^ 34,
+         mas_vnr_area = sqrt(mas_vnr_area),
+         total_bsmt_sf = total_bsmt_sf ^ 0.33,
+         garage_area = garage_area ^ 0.25,
+         misc_val = sqrt(misc_val))
+
+# Fit Model 2
+model2 <- lm(sale_price ~
+               lot_area + overall_qual + year_built + mas_vnr_area +
+               total_bsmt_sf + garage_area + misc_val, data = new_data)
+```
+
+Variance stabilizing transformations and Box-Cox transformations are applied to the variables. These transformations ensure that the data does not violate any assumption. Following this step, a new model (Model 2) is developed using the transformed data.
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Show Hypothesis Testing Result
+summary(model2)
+```
+
+Model 2 is further refined by conducting hypothesis testing for the coefficients. This step evaluates the statistical significance of them, ensuring interpretability and relevance. However, since all coefficients are significant, we would keep Model 2.
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Do All-Subsets Selection
+summary(regsubsets(sale_price ~ lot_area + overall_qual + year_built +
+                     mas_vnr_area + total_bsmt_sf + garage_area + misc_val,
+                   data = new_data, nbest = 1, nvmax = 7))
+
+# Compare the Models
+
+```
+
+```{r, fig.pos="H"}
+#| label: tbl-subset
+#| tbl-cap: Criteria for Model of Each Size
+#| echo: false
+#| warning: false
+#| message: false
+
+# Summarize the Criteria
+
+```
+
+Model 2 undergoes an all-subset selection process to identify the best combination of predictors. Selection criteria for models with same size is $R^2_{adj}$. To choose the best of the best, $R^2_{adj}$, $AIC$, $AIC_c$, and $BIC$ are used. If there are similar models, use $VIF$ to check for multicollinearity. The resulted model is Model 3.
+
 # Results (750)
 
 # Conclusion and Limitations (350)
@@ -44,11 +144,159 @@ In "Dynamic Relationships Between Commodity Prices and Local Housing Market", th
 
 \appendix
 
-# Appendix
+# Appendix {-}
 
-## Detailed Process of Checking Assumptions
+# Graphs of Conditions and Assumptions Checking {#sec-assumption}
 
-## Ethics Discussion
+## Conditions
+
+```{r, fig.pos="H"}
+#| label: fig-fit-resp
+#| fig-cap: Responses vs. Fitted Values
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot responses against fitted values
+plot(x = fit1, y = data$sale_price,
+     xlab = "Fitted Values",
+     ylab = "Responses")
+
+abline(a = 0, b = 1, lty = 2)
+```
+
+```{r, fig.pos="H"}
+#| label: fig-pair
+#| fig-cap: Pairwise Scatterplots of Predictors
+#| echo: false
+#| warning: false
+#| message: false
+
+# Convert variables to factors
+data$central_air <- as.factor(data$central_air)
+data$roof_style <- as.factor(data$roof_style)
+
+# Plot predictors against each other
+pairs(data[, 2:9])
+```
+
+We can see that both conditions are satisfied, so the residual plots would be valid.
+
+## Assumptions
+
+```{r, fig.pos="H"}
+#| label: fig-res-1
+#| fig-cap: Residuals vs. Observation - I
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot residuals against `lot_area`
+graph1 <- ggplot(data, aes(x = lot_area, y = res1)) +
+  geom_point() +
+  xlab("`lot_area`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against `overall_qual`
+graph2 <- ggplot(data, aes(x = overall_qual, y = res1)) +
+  geom_point() +
+  xlab("`overall_qual`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against `year_built`
+graph3 <- ggplot(data, aes(x = year_built, y = res1)) +
+  geom_point() +
+  xlab("`year_built`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against `mas_vnr_area`
+graph4 <- ggplot(data, aes(x = mas_vnr_area, y = res1)) +
+  geom_point() +
+  xlab("`mas_vnr_area`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 4 residual plots together
+graph1 + graph2 + graph3 + graph4
+```
+
+```{r, fig.pos="H"}
+#| label: fig-res-2
+#| fig-cap: Residuals vs. Observation - II
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot residuals against `total_bsmt_sf`
+graph5 <- ggplot(data, aes(x = total_bsmt_sf, y = res1)) +
+  geom_point() +
+  xlab("`total_bsmt_sf`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against `garage_area`
+graph6 <- ggplot(data, aes(x = garage_area, y = res1)) +
+  geom_point() +
+  xlab("`garage_area`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against `misc_val`
+graph7 <- ggplot(data, aes(x = misc_val, y = res1)) +
+  geom_point() +
+  xlab("`misc_val`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 3 residual plots together
+graph5 + graph6 + graph7
+```
+
+```{r, fig.pos="H"}
+#| label: fig-res-3
+#| fig-cap: Residuals vs. Observation - III
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot residuals against `roof_style`
+graph8 <- ggplot(data, aes(x = roof_style, y = res1)) +
+  geom_boxplot() +
+  xlab("`roof_style`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot residuals against `central_air`
+graph9 <- ggplot(data, aes(x = central_air, y = res1)) +
+  geom_boxplot() +
+  xlab("`central_air`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 2 boxplots together
+graph8 + graph9
+```
+
+We can see some violations of linearity and constant variance in `lot_area`, `overall_qual`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val`.
+
+```{r, fig.pos="H"}
+#| label: fig-qq
+#| fig-cap: Q-Q Plot
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot the Q-Q plot
+qqnorm(res1)
+qqline(res1, col = "red")
+```
+
+Normality is not violated.
+
+# Ethics Discussion
 
 Our data is collected from Ames City Assessor's Office (@ames), then we cleaned the data to only keep some necessary key factors that is highly relavant to house prices. Raw and processed versions of the data from De Cock is published on Journal of Statistics Education in 2011. The cleaned data we are using includes some detailed information about housing characteristics, but does not contain personal identifiers.
 
@@ -58,9 +306,9 @@ The use of automated selection tools in academic research brings both opportunit
 
 Ensuring fairness and avoiding skewed results require careful selection of training data and ongoing monitoring to detect and mitigate biases presented in AI training data. While automated tools can enhance productivity, they should not replace human judgment. By addressing these ethical considerations, we can leverage the benefits of automated selection tools while maintaining the integrity and fairness during our research practices.
 
-## Editing Demonstration
+# Editing Demonstration
 
-### Original Version of Introduction
+## Original Version of Introduction
 
 The primary research question we aim to answer is: What are the key factors that significantly influence house prices in Ames from 2006 to 2010? Sale price of the house is the response variable. Predictor variables include area, overall quality index, year of construction, house facilities, and value of miscellaneous feature. By identifying and analyzing the factors that significantly influence house prices, our research can offer practical recommendations for various stakeholders, ultimately contributing to a more efficient and transparent real estate market in Ames. Similar analysis can be done to other cities to improve economic insights and investment decisions.
 
@@ -70,7 +318,7 @@ We found several peer-reviewed articles that focus on similar problems with this
 
 In "Dynamic Relationships Between Commodity Prices and Local Housing Market", this research examines the significant nonlinear relationship between agricultural commodity prices and the local housing market (@dynamic). The research "Non-Linear Relationships Between House Size and Price" clarifies the nonlinear relationships between housing size and price (@size). These two researches explain another aspect, a non-linear relationship, between house price and other factors, providing more comprehensive information about house market for decision making of the developers, home purchasers, real estate appraisers, and the governments.
 
-### Editted Version of Introduction
+## Editted Version of Introduction
 
 The research question we aim to answer is: what are the factors that influence house prices in Ames from 2006 to 2010? We would set up a linear regression model to answer this with house prices as the outcome (response). Factors that might affect the outcome (predictors) include area, quality, year of construction, facilities, etc.
 
@@ -80,9 +328,9 @@ We found several peer-reviewed articles that focus on similar problems with this
 
 In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
 
-### Comments on the Process
+## Comments on the Process
 
-## Contributions
+# Contributions
 
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
 
