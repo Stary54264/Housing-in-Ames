@@ -3,7 +3,7 @@ title: "Housing in Ames"
 author: "Yanzun Jiang, Siyuan Lu, Yi Tang"
 date: today
 date-format: long
-thanks: "Code and data supporting this proposal is available at: <https://github.com/Stary54264/Housing-in-Ames>"
+thanks: "Code and data supporting this paper is available at: <https://github.com/Stary54264/Housing-in-Ames>"
 format: pdf
 number-sections: true
 toc: true
@@ -20,6 +20,7 @@ library(knitr)
 library(patchwork)
 library(car)
 library(leaps)
+library(MASS)
 ```
 
 \newpage
@@ -34,7 +35,7 @@ We found several peer-reviewed articles that focus on similar problems with this
 
 In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
 
-# Method (500)
+# Method
 
 ```{r}
 #| include: false
@@ -44,6 +45,8 @@ In "Dynamic Relationships Between Commodity Prices and Local Housing Market", th
 # Read Data
 data <- read_csv(here::here("data", "cleaned_data.csv"))
 ```
+
+The process begins by constructing the initial multiple linear regression model (Model 1) using selected predictors that are theoretically or empirically linked to the response variable. This model serves as a baseline for exploring the underlying relationships between predictors and the outcome. It provides a starting point to identify how well the chosen predictors explain the variance in the response variable.
 
 ```{r}
 #| include: false
@@ -61,9 +64,9 @@ fit1 <- fitted(model1)
 res1 <- resid(model1)
 ```
 
-Our process begins by developing an initial multiple linear regression model (Model 1) using selected predictors. This model serves as the baseline for evaluating the relationship between the predictors and the response variable. It also provides the foundation for subsequent diagnostic checks and refinements.
+After Model 1 is developed, it is essential to validate its reliability by checking two conditions (conditional mean response and conditional mean predictor) and four assumptions (linearity, uncorrelated errors, constant variances, and normality). Graphical tools like residual plots, and Q-Q plots are applied. This diagnostic step identifies potential issues that may compromise the model's interpretability or predictive accuracy, guiding subsequent corrections.
 
-After building Model 1, the two conditions (conditional mean response and conditional mean predictors) and four assumptions (linearity, uncorrelated errors, constant variance, and normality) are verified. Graphical diagnostics are included in @sec-assumption.
+If diagnostic checks reveal violations, variance-stabilizing transformation and Box-Cox transformation is performed. Variance stabilizing transformation is applied to variables with many zeros, which is to take their square root. Box-Cox transformation is applied to other variables, identifing an optimal power transformation or natural logarithmic transformation for the variables. Applying these transformations ensures that the model assumptions are more closely met, enhancing its validity. After the transformation, a refined model (Model 2) is constructed to account for the adjusted data distribution.
 
 ```{r}
 #| include: false
@@ -72,7 +75,7 @@ After building Model 1, the two conditions (conditional mean response and condit
 
 # Remove Categorical Predictors
 box_cox_data <- data |>
-  select(-roof_style, -central_air, -mas_vnr_area, -misc_val) |>
+  dplyr::select(-roof_style, -central_air, -mas_vnr_area, -misc_val) |>
   filter_all(all_vars(. != 0))
 
 # Get Suitable Powers
@@ -80,7 +83,7 @@ summary(powerTransform(cbind(box_cox_data[, 1:6])))
 
 # Do Box-Cox Transformation
 new_data <- data |>
-  select(-roof_style, -central_air) |>
+  dplyr::select(-roof_style, -central_air) |>
   mutate(sale_price = log(sale_price),
          lot_area = log(lot_area),
          overall_qual = overall_qual ^ 0.8,
@@ -96,7 +99,7 @@ model2 <- lm(sale_price ~
                total_bsmt_sf + garage_area + misc_val, data = new_data)
 ```
 
-Variance stabilizing transformations and Box-Cox transformations are applied to the variables. These transformations ensure that the data does not violate any assumption. Following this step, a new model (Model 2) is developed using the transformed data.
+Model 2 is refined further by testing the significance of coefficients through hypothesis testing. This step examines whether the coefficients significantly contributes to the model or if it can be excluded without sacrificing explanatory power. A non-significant coefficient could simplify the model, while a significant one may provide valuable context for interpreting the predictors. Adjustments based on these tests lead to the construction of Model 3, a more refined version that aligns closely with theoretical considerations.
 
 ```{r}
 #| include: false
@@ -107,7 +110,11 @@ Variance stabilizing transformations and Box-Cox transformations are applied to 
 summary(model2)
 ```
 
-Model 2 is further refined by conducting hypothesis testing for the coefficients. This step evaluates the statistical significance of them, ensuring interpretability and relevance. However, since all coefficients are significant, we would keep Model 2.
+The all-subset selection process begins by systematically evaluating models with the same number of predictors. At this stage, the sole evaluation criterion is $R^2_{adj}$, which measures how well each model explains the variance in the response variable while accounting for the number of predictors. Models with higher $R^2_{adj}$ are preferred.
+
+Once the best model within each size category is identified, these "best of size" models are compared to select the overall best-performing model. This step incorporates multiple criteria to balance model fit and complexity. $R^2_{adj}$ continues to be a key measure, but additional metrics like $AIC$, $AIC_c$, and $BIC$ are introduced. They all emphasize model fit while penalizing for complexity, with $AIC_c$ being useful for small sample sizes, and $BIC$ imposing a stricter penalty for model size. Models with lower criteria values are preferred. If two or more models perform similarly based on these metrics, $VIF$ is used. VIF quantifies multicollinearity, with lower values preferred.
+
+By the end of this process, Model 4 is identified as the best subset of predictors. It balances explanatory power and simplicity.
 
 ```{r}
 #| include: false
@@ -119,9 +126,124 @@ summary(regsubsets(sale_price ~ lot_area + overall_qual + year_built +
                      mas_vnr_area + total_bsmt_sf + garage_area + misc_val,
                    data = new_data, nbest = 1, nvmax = 7))
 
-# Compare the Models
+# Build the Models
+model_A <- lm(sale_price ~ overall_qual, data = new_data)
+model_B <- lm(sale_price ~ overall_qual + lot_area, data = new_data)
+model_C <- lm(sale_price ~ overall_qual + lot_area + year_built,
+              data = new_data)
+model_D <- lm(sale_price ~ overall_qual + lot_area + year_built +
+                total_bsmt_sf, data = new_data)
+model_E <- lm(sale_price ~ overall_qual + lot_area + year_built +
+                total_bsmt_sf + garage_area, data = new_data)
+model_F <- lm(sale_price ~ overall_qual + lot_area + year_built +
+                total_bsmt_sf + garage_area + mas_vnr_area, data = new_data)
 
+# Get n and p
+n <- nrow(new_data)
+p_A <- length(coef(model_A)) - 1
+p_B <- length(coef(model_B)) - 1
+p_C <- length(coef(model_C)) - 1
+p_D <- length(coef(model_D)) - 1
+p_E <- length(coef(model_E)) - 1
+p_F <- length(coef(model_F)) - 1
+p2 <- length(coef(model2)) - 1
+
+# Summarize the Criteria
+summary_table <- 
+  data.frame(Model = c("Model A", "Model B", "Model C", "Model D",
+                       "Model E", "Model F","Model G"),
+             R2 = c(summary(model_A)$adj.r.squared,
+                    summary(model_B)$adj.r.squared,
+                    summary(model_C)$adj.r.squared,
+                    summary(model_D)$adj.r.squared,
+                    summary(model_E)$adj.r.squared,
+                    summary(model_F)$adj.r.squared,
+                    summary(model2)$adj.r.squared),
+             AIC = c(extractAIC(model_A, k = 2)[2],
+                     extractAIC(model_B, k = 2)[2],
+                     extractAIC(model_C, k = 2)[2],
+                     extractAIC(model_D, k = 2)[2],
+                     extractAIC(model_E, k = 2)[2],
+                     extractAIC(model_F, k = 2)[2],
+                     extractAIC(model2, k = 2)[2]),
+             AIC_c = c(extractAIC(model_A, k = 2)[2] +
+                         2 * (p_A + 2) * (p_A + 3) / (n - p_A - 1),
+                       extractAIC(model_B, k = 2)[2] +
+                         2 * (p_B + 2) * (p_B + 3) / (n - p_B - 1),
+                       extractAIC(model_C, k = 2)[2] +
+                         2 * (p_C + 2) * (p_C + 3) / (n - p_C - 1),
+                       extractAIC(model_D, k = 2)[2] +
+                         2 * (p_D + 2) * (p_D + 3) / (n - p_D - 1),
+                       extractAIC(model_E, k = 2)[2] +
+                         2 * (p_E + 2) * (p_E + 3) / (n - p_E - 1),
+                       extractAIC(model_F, k = 2)[2] +
+                         2 * (p_F + 2) * (p_F + 3) / (n - p_F - 1),
+                       extractAIC(model2, k = 2)[2] +
+                         2 * (p2 + 2) * (p2 + 3) / (n - p2 - 1)),
+             BIC = c(extractAIC(model_A, k = log(n))[2],
+                     extractAIC(model_B, k = log(n))[2],
+                     extractAIC(model_C, k = log(n))[2],
+                     extractAIC(model_D, k = log(n))[2],
+                     extractAIC(model_E, k = log(n))[2],
+                     extractAIC(model_F, k = log(n))[2],
+                     extractAIC(model2, k = log(n))[2]),
+             VIF = c(0, max(vif(model_B)), max(vif(model_C)),
+                     max(vif(model_D)), max(vif(model_E)),
+                     max(vif(model_F)), max(vif(model2))))
+
+# Round the Values
+summary_table <- summary_table |>
+  mutate(across(where(is.numeric), ~ round(., 2)))
 ```
+
+To refine Model 3, automated selection tools could also employed. The method we used is stepwise selection, which assess predictor subsets, streamlining the selection process. It enhance efficiency while maintaining rigor in identifying the most suitable predictors. Model 5, is the culmination of this process, balancing explanatory power and simplicity.
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Do Stepwise Selection
+stepAIC(lm(sale_price ~ ., data = new_data, direction = "both", k = 2))
+```
+
+# Results
+
+In this study, we followed a systematic process to build and evaluate multiple regression models. Models 1 through 5 were developed and assessed based on several performance criteria. The models were constructed step by step, starting from a full model and progressing through various techniques to improve model performance. Below, we describe the key steps for building Models 1 through 5 and the results for each model.
+
+## Model 1
+
+Model 1 was constructed by fitting a simple linear regression model using the initially selected predictors. At this stage, the goal was to build a baseline model to examine the relationship between the predictors and the response variable. This model was used to assess the overall fit, and the results from this initial model informed subsequent steps. This model allowed us to identify areas where assumptions may have been violated, and highlighted the need for transformations in subsequent steps. Overall, Model 1 provided the groundwork for more advanced models that followed, which involved further diagnostic checks and adjustments.
+
+## Model 2
+
+By checking the conditions (conditional mean response and conditional mean predictors), the validity of the results of residual plots would be ensured. After checking the assumptions (linearity, uncorrelated errors, constant variances, and normality) in Model 1 using residual plots and Q-Q plots, we observed that some violations exists. Plots are available in @sec-assumptions.
+
+To stabilize the variance and improve model fit, we applied variance-stabilizing transformation with variable with zeros, and Box-Cox transformation to other variables. This transformation improved the adherence to the assumptions.
+
+After applying the transformations, we fit another model, Model 2, and checked the assumptions again. The transformed model performed better in terms of the assumptions compared to Model 1, suggesting that the the transformations have a positive effect.
+
+## Model 3
+
+Model 3 was built by performing hypothesis testing for each coefficient in Model 2. The goal was to evaluate the significance of each predictor and determine whether they contributed meaningfully to explaining the response variable. We set $\alpha=0.05$, and used the function `summary()` in R to get a summary table. In the p-value column in the table, we found out that all predictors have a p-value that is smaller than 0.05, meaning all coefficients are significant.
+
+This process led to a refined set of predictors, where only those with statistically significant relationships to the response variable remained in the model. However, since all coefficients are significant, Model 3 is the same model as Model 2.
+
+## Model 4
+
+Model 4 was constructed using an all-subset regression approach, where we evaluated every possible combination of predictors to identify the best model based on several performance criteria: adjusted \( R^2 \), AIC, BIC, and VIF. This technique allowed us to compare multiple models and select the one that provided the best trade-off between fit and complexity.
+
+The results showed that the model with the highest adjusted \( R^2 \) also had the lowest AIC and BIC, indicating that this combination of predictors provided the best fit while avoiding overfitting. Additionally, the VIF values were all below the threshold of 10, suggesting that multicollinearity was not a concern in the chosen model. The all-subset regression approach helped refine the predictor set further and led to a model that balanced complexity and predictive accuracy effectively.
+
+#### Model 5: Automated Selection Tool (R^2_adj, AIC, BIC, VIF)
+
+Finally, Model 5 was built using an automated selection tool, specifically a stepwise selection procedure, which included both forward and backward selection. The tool was set to evaluate models based on adjusted \( R^2 \), AIC, BIC, and VIF. This automated process iteratively added or removed predictors to find the best model.
+
+The results from the automated selection procedure showed that the final model selected through this process was highly similar to Model 4. The model had high adjusted \( R^2 \), low AIC and BIC values, and VIF values below the threshold, indicating that the predictors were highly relevant and not highly collinear. The automated selection procedure confirmed that the subset of predictors identified in Model 4 was indeed optimal for explaining the variance in the dependent variable.
+
+### Conclusion
+
+In summary, Models 3, 4, and 5 showed similar performance in terms of adjusted \( R^2 \), AIC, BIC, and VIF. While each model incorporated slightly different techniques and adjustments, none of the models significantly outperformed the others. Model 2, which included the variance-stabilizing and Box-Cox transformations, provided a strong baseline for the analysis. Further refinements in Models 3, 4, and 5, including hypothesis testing for coefficients, all-subset regression, and automated model selection, confirmed that the set of predictors in Model 2 was optimal. The final models (Models 4 and 5) were very similar to Model 2, reinforcing the conclusion that the transformations and predictor set chosen in Model 2 were highly effective in explaining the variation in the dependent variable.
 
 ```{r, fig.pos="H"}
 #| label: tbl-subset
@@ -130,15 +252,21 @@ summary(regsubsets(sale_price ~ lot_area + overall_qual + year_built +
 #| warning: false
 #| message: false
 
-# Summarize the Criteria
-
+# Show the Table
+kable(summary_table,
+      col.names = c("Model", "R^2_{adj}", "AIC",
+                    "AIC_c", "BIC", "VIF_{max}"))
 ```
 
-Model 2 undergoes an all-subset selection process to identify the best combination of predictors. Selection criteria for models with same size is $R^2_{adj}$. To choose the best of the best, $R^2_{adj}$, $AIC$, $AIC_c$, and $BIC$ are used. If there are similar models, use $VIF$ to check for multicollinearity. The resulted model is Model 3.
+# Conclusion and Limitations
 
-# Results (750)
+This paper examined various models using multiple linear regression techniques to identify the best fit for the data, guided by several performance metrics including $R^2_{adj}$, $AIC$, $AIC_c$, $BIC$, and $VIF$. By building and comparing a series of models, we aimed to identify the model that most accurately captured the relationship between the predictor variables and the response variable, while avoiding overfitting.
 
-# Conclusion and Limitations (350)
+Despite the insights gained through this process, the study has several limitations. One significant limitation is the assumption of linearity inherent in multiple linear regression. This assumption may not hold in all cases, particularly when the true relationship between the variables is non-linear. In such cases, linear regression models may be less accurate, and alternative techniques such as non-linear regression or machine learning methods may be more appropriate. Additionally, the models evaluated in this paper were limited to a specific set of predictors and may not fully account for other potentially relevant variables. The inclusion of more variables, or the use of more complex models such as interaction terms, could improve the predictive power of the model.
+
+Another limitation is that in this study, we did not perform a train-test split, which means the models were evaluated on the entire dataset rather than being validated on unseen data. This approach prioritizes understanding the relationships between variables and the underlying structure of the data, rather than focusing on predictive accuracy. While this method provides valuable insights into the model's fit and the significance of various predictors, it does not allow for an assessment of how well the model would generalize to new, unseen data. As a result, the primary objective here was to explore and interpret the model, rather than make predictions.
+
+Finally, the reliance on statistical criteria such as AIC and BIC for model selection might be biased. While these metrics are widely used in model selection, they are not without criticism. AIC, for instance, does not penalize overfitting as strongly as BIC, which could lead to different model choices depending on the metric used. Moreover, both AIC and BIC assume that the errors are normally distributed, which may not always be the case in real-world data.
 
 \newpage
 
@@ -146,7 +274,7 @@ Model 2 undergoes an all-subset selection process to identify the best combinati
 
 # Appendix {-}
 
-# Graphs of Conditions and Assumptions Checking {#sec-assumption}
+# Graphs of Conditions and Assumptions Checking {#sec-assumptions}
 
 ## Conditions
 
