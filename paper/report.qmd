@@ -268,8 +268,24 @@ The final model we choose is Model 2 (Model 3, 4, and 5). Its formula is listed 
 
 \begin{align}
 log(Y) = 8.57+0.187 \times log(X_1)+0.280 \times X_2^{0.8}+1.47 \times 10^{-113} \times X_3^{34}+ \\
-3.35 \times 10^{-3} \times X_4^{0.5}+0.0229 \times X_5^{0.33}+0.0348 \times X_6^{0.25}+(-1.03 \times 10^{-3}) \times X_7^{0.5}
+3.35 \times 10^{-3} \times X_4^{0.5}+0.0229 \times X_5^{0.33}+0.0348 \times X_6^{0.25}+(-1.03 \times 10^{-3}) \times X_7^{0.5}+\epsilon
 \end{align}
+
+$Y$: `sale_price`
+
+$X_1$: `lot_area`
+
+$X_2$: `overall_qual`
+
+$X_3$: `year_built`
+
+$X_4$: `mas_vnr_area`
+
+$X_5$: `total_bsmt_sf`
+
+$X_6$: `garage_area`
+
+$X_7$: `misc_val`
 
 ## Limitation
 
@@ -511,12 +527,11 @@ In "Dynamic Relationships Between Commodity Prices and Local Housing Market", th
 
 ## Comments on the Process
 
-We choose to edit the introduction by simplicity. Our original introduction contains some clutters. We can improve the introduction clearer and shorter. 
+Editor: Siyuan Lu
 
-Original text: We will test whether there is a statistically significant linear relationship between certain property characteristics (predictors) and the sale price of houses (response) using linear regression.
-Edited text: By setting up the model, we can identify the factors that influence house prices. 
+We choose to edit the introduction by simplicity, since our original introduction contains some clutters. We can improve the introduction to make it clearer and shorter.
 
-It is easy to delete some complex sentences when read the introduction with the editing techniques. The challenge part is to break and modify sentences in clearer and fewer words. 
+It is easy to delete some complex sentences when read the introduction with the editing techniques. However, breaking and modifying sentences in clearer and fewer words is quite challenging.
 
 # Contributions
 
