@@ -30,11 +30,11 @@ The repo is structured as:
 -   [X] Details are provided to describe what tools are used and how conclusions are drawn in each case above and are appropriate/correct.
 
 **Report - Results**
--   [ ] Process of determining a final model is organized logically, is easy to follow, is consistent with the methods section, and highlights important decisions made to arrive at final model rather than documenting every small step in the analysis.
--   [ ] Appropriate evidence is provided to support conclusions and decisions to arrive at the final model, and this evidence is referenced explicitly.
--   [ ] Conclusions of model selection method(s)/tool(s) are correct and appropriate based on previous analysis results/steps.
--   [ ] Information is provided to confirm that model assumptions have been assessed and model diagnostics have been performed correctly and in appropriate places.
--   [ ] The final model that is used to answer the research question is presented in a professional and easily understandable way.
+-   [X] Process of determining a final model is organized logically, is easy to follow, is consistent with the methods section, and highlights important decisions made to arrive at final model rather than documenting every small step in the analysis.
+-   [X] Appropriate evidence is provided to support conclusions and decisions to arrive at the final model, and this evidence is referenced explicitly.
+-   [X] Conclusions of model selection method(s)/tool(s) are correct and appropriate based on previous analysis results/steps.
+-   [X] Information is provided to confirm that model assumptions have been assessed and model diagnostics have been performed correctly and in appropriate places.
+-   [X] The final model that is used to answer the research question is presented in a professional and easily understandable way.
 
 **Report - Conclusion and Limitations**
 -   [X] An explicit answer to the research question is provided and is consistent with how a linear model was proposed to answer the question in the introduction.
@@ -45,11 +45,11 @@ The repo is structured as:
 **Report - Figures and Tables**
 -   [X] All figures/tables are correctly labelled (e.g., Figure 1) and have informative captions describing the main message of the figure/table.
 -   [X] All figures/tables have meaningful titles, axis labels (if applicable) and variable names.
--   [ ] All figures/tables presented in the report and the appendix are referred to in the text.
+-   [X] All figures/tables presented in the report and the appendix are referred to in the text.
 -   [X] Individual plots that are combined into a single figure are appropriately sized and easy to read.
 
 **Report - Structure and Readability**
--   [ ] Each section of the report meets the maximum word count or exceeds it by only 15 words.
+-   [X] Each section of the report meets the maximum word count or exceeds it by only 15 words.
 -   [X] The report is well structured, with appropriate sections and appropriate usage of paragraphs for increased readability.
 -   [X] The report does not contain R code or output copied directly from R.
 -   [X] References are written in an appropriate and consistent citation format.
