@@ -37,9 +37,9 @@ The repo is structured as:
 -   [ ] The final model that is used to answer the research question is presented in a professional and easily understandable way.
 
 **Report - Conclusion and Limitations**
--   [ ] An explicit answer to the research question is provided and is consistent with how a linear model was proposed to answer the question in the introduction.
--   [ ] One estimated coefficient is correctly interpreted formally using course terminology in the context of the research question.
--   [ ] A brief discussion is provided on whether the answer to the research question is surprising or consistent with the literature from the introduction.
+-   [X] An explicit answer to the research question is provided and is consistent with how a linear model was proposed to answer the question in the introduction.
+-   [X] One estimated coefficient is correctly interpreted formally using course terminology in the context of the research question.
+-   [X] A brief discussion is provided on whether the answer to the research question is surprising or consistent with the literature from the introduction.
 -   [X] Limitations of the analysis (or lack of) are identified (e.g. extreme observations, violated assumptions, limited data, etc.) and the impact of these are correctly identified.
 
 **Report - Figures and Tables**
