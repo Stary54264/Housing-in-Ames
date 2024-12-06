@@ -23,11 +23,11 @@ The repo is structured as:
 -   [X] An appropriate justification is given on how a linear model can be used to answer this research question and whether the focus will be on interpretability/description or prediction.
 
 **Report - Methods**
--   [ ] How a final model for answering the research question is developed using the course material is explicitly and logically outlined.
--   [ ] All assumptions are explicitly assessed and options for mitigating the potential violations are explicitly mentioned.
--   [ ] All model diagnostics are explicitly stated and options for mitigating any issues are explicitly mentioned.
--   [ ] The order in which the model building, assessment of assumptions and model diagnostic steps would proceed is explicit.
--   [ ] Details are provided to describe what tools are used and how conclusions are drawn in each case above and are appropriate/correct.
+-   [X] How a final model for answering the research question is developed using the course material is explicitly and logically outlined.
+-   [X] All assumptions are explicitly assessed and options for mitigating the potential violations are explicitly mentioned.
+-   [X] All model diagnostics are explicitly stated and options for mitigating any issues are explicitly mentioned.
+-   [X] The order in which the model building, assessment of assumptions and model diagnostic steps would proceed is explicit.
+-   [X] Details are provided to describe what tools are used and how conclusions are drawn in each case above and are appropriate/correct.
 
 **Report - Results**
 -   [ ] Process of determining a final model is organized logically, is easy to follow, is consistent with the methods section, and highlights important decisions made to arrive at final model rather than documenting every small step in the analysis.
@@ -40,19 +40,19 @@ The repo is structured as:
 -   [ ] An explicit answer to the research question is provided and is consistent with how a linear model was proposed to answer the question in the introduction.
 -   [ ] One estimated coefficient is correctly interpreted formally using course terminology in the context of the research question.
 -   [ ] A brief discussion is provided on whether the answer to the research question is surprising or consistent with the literature from the introduction.
--   [ ] Limitations of the analysis (or lack of) are identified (e.g. extreme observations, violated assumptions, limited data, etc.) and the impact of these are correctly identified.
+-   [X] Limitations of the analysis (or lack of) are identified (e.g. extreme observations, violated assumptions, limited data, etc.) and the impact of these are correctly identified.
 
 **Report - Figures and Tables**
--   [ ] All figures/tables are correctly labelled (e.g., Figure 1) and have informative captions describing the main message of the figure/table.
--   [ ] All figures/tables have meaningful titles, axis labels (if applicable) and variable names.
+-   [X] All figures/tables are correctly labelled (e.g., Figure 1) and have informative captions describing the main message of the figure/table.
+-   [X] All figures/tables have meaningful titles, axis labels (if applicable) and variable names.
 -   [ ] All figures/tables presented in the report and the appendix are referred to in the text.
--   [ ] Individual plots that are combined into a single figure are appropriately sized and easy to read.
+-   [X] Individual plots that are combined into a single figure are appropriately sized and easy to read.
 
 **Report - Structure and Readability**
 -   [ ] Each section of the report meets the maximum word count or exceeds it by only 15 words.
--   [ ] The report is well structured, with appropriate sections and appropriate usage of paragraphs for increased readability.
--   [ ] The report does not contain R code or output copied directly from R.
--   [ ] References are written in an appropriate and consistent citation format.
+-   [X] The report is well structured, with appropriate sections and appropriate usage of paragraphs for increased readability.
+-   [X] The report does not contain R code or output copied directly from R.
+-   [X] References are written in an appropriate and consistent citation format.
 
 **Poster - Research Question and Data**
 -   [ ] The research question is explicitly stated and a clear motivation for this topic is provided.
