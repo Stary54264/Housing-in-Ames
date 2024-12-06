@@ -231,19 +231,7 @@ This process led to a refined set of predictors, where only those with statistic
 
 ## Model 4
 
-Model 4 was constructed using an all-subset regression approach, where we evaluated every possible combination of predictors to identify the best model based on several performance criteria: adjusted \( R^2 \), AIC, BIC, and VIF. This technique allowed us to compare multiple models and select the one that provided the best trade-off between fit and complexity.
-
-The results showed that the model with the highest adjusted \( R^2 \) also had the lowest AIC and BIC, indicating that this combination of predictors provided the best fit while avoiding overfitting. Additionally, the VIF values were all below the threshold of 10, suggesting that multicollinearity was not a concern in the chosen model. The all-subset regression approach helped refine the predictor set further and led to a model that balanced complexity and predictive accuracy effectively.
-
-#### Model 5: Automated Selection Tool (R^2_adj, AIC, BIC, VIF)
-
-Finally, Model 5 was built using an automated selection tool, specifically a stepwise selection procedure, which included both forward and backward selection. The tool was set to evaluate models based on adjusted \( R^2 \), AIC, BIC, and VIF. This automated process iteratively added or removed predictors to find the best model.
-
-The results from the automated selection procedure showed that the final model selected through this process was highly similar to Model 4. The model had high adjusted \( R^2 \), low AIC and BIC values, and VIF values below the threshold, indicating that the predictors were highly relevant and not highly collinear. The automated selection procedure confirmed that the subset of predictors identified in Model 4 was indeed optimal for explaining the variance in the dependent variable.
-
-### Conclusion
-
-In summary, Models 3, 4, and 5 showed similar performance in terms of adjusted \( R^2 \), AIC, BIC, and VIF. While each model incorporated slightly different techniques and adjustments, none of the models significantly outperformed the others. Model 2, which included the variance-stabilizing and Box-Cox transformations, provided a strong baseline for the analysis. Further refinements in Models 3, 4, and 5, including hypothesis testing for coefficients, all-subset regression, and automated model selection, confirmed that the set of predictors in Model 2 was optimal. The final models (Models 4 and 5) were very similar to Model 2, reinforcing the conclusion that the transformations and predictor set chosen in Model 2 were highly effective in explaining the variation in the dependent variable.
+Model 4 was constructed using an all-subset regression approach, where the models with same number of predictors are compared using $R^2_{adj}$. Then, the best of bests is selected using $R^2_{adj}$, $AIC$, $AIC_c$, and $BIC$. thses values are listed in @tbl-subset. This technique allowed us to compare multiple models and select the one that provided the best trade-off between fit and complexity.
 
 ```{r, fig.pos="H"}
 #| label: tbl-subset
@@ -257,6 +245,18 @@ kable(summary_table,
       col.names = c("Model", "R^2_{adj}", "AIC",
                     "AIC_c", "BIC", "VIF_{max}"))
 ```
+
+The results showed that Model F and Model G has similar $R^2_{adj}$. However, Model G has smaller $AIC$ and $AIC_c$, while Model F has smaller $BIC$. Since $BIC$ has severe penalty on more predictors, we choose Model G to be Model 4. Additionally, the $VIF$ values were all below the threshold of 5, suggesting that multicollinearity was not a concern in the chosen model. The all-subset regression approach led to a model that balanced complexity and predictive accuracy effectively. Since Model 4 is also a full model, it is the same model as Model 2.
+
+## Model 5
+
+Finally, Model 5 was built using an automated selection tool, specifically a stepwise selection procedure, which included both forward and backward selection. The tool was set to evaluate models based on $AIC$, and we start with a full model. This automated process iteratively added or removed predictors to find the best model.
+
+The stepwise selection only take one step to find the best model - the full model (Model 5), since deleting any predictor would result in a larger $AIC$. The automated selection procedure confirmed that the full model was indeed optimal for explaining the variance in the response variable.
+
+## Conclusion
+
+In summary, Models 3, 4, and 5 are the full model. While each model incorporated slightly different techniques and adjustments, none of the models significantly outperformed the others. So, we are confident to conclude that the optimal model to answer the research question is just the full model with variables transformed.
 
 # Conclusion and Limitations
 
@@ -471,7 +471,7 @@ In "Dynamic Relationships Between Commodity Prices and Local Housing Market", th
 
 Group contribution is available at <https://github.com/Stary54264/Housing-in-Ames/graphs/contributors>. Below is a more specific version of group contribution.
 
-- Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; built the model; checked conditions and assumptions; refined the model by transformation, hypothesis testing, all subsets, and automated selection tools; made the reference list; revised group member's work; combined group member's work together.
+- Yanzun Jiang: Organized discussions and meetings; assigned tasks to group members; set up Github workspace for collaborating; built the model; checked conditions and assumptions; refined the model by transformation, hypothesis testing, all-subset selection, and automated selection tools; made the reference list; revised group member's work; combined group member's work together.
 
 - Siyuan Lu: Set research question; searched and read peer-reviewed articles; introduced the project; checked data ethics; edited introduction.
 
