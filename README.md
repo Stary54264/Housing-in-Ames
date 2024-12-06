@@ -55,20 +55,20 @@ The repo is structured as:
 -   [X] References are written in an appropriate and consistent citation format.
 
 **Poster - Research Question and Data**
--   [ ] The research question is explicitly stated and a clear motivation for this topic is provided.
--   [ ] The source of the data is explicitly stated/provided and why it is appropriate to use to answer the question is correctly stated.
--   [ ] A discussion on how the data were originally collected and why it may be trustworthy or reliable is provided.
+-   [X] The research question is explicitly stated and a clear motivation for this topic is provided.
+-   [X] The source of the data is explicitly stated/provided and why it is appropriate to use to answer the question is correctly stated.
+-   [X] A discussion on how the data were originally collected and why it may be trustworthy or reliable is provided.
 
 **Poster - Analysis and Conclusions**
--   [ ] The methods/techniques employed to answer the research question are outlined.
+-   [X] The methods/techniques employed to answer the research question are outlined.
 -   [ ] An answer to the research question is provided which is consistent with the analysis and evidence presented.
--   [ ] Sufficient evidence is presented that allows the reader to understand how the research question was answered and to evaluate whether the process was correct.
+-   [X] Sufficient evidence is presented that allows the reader to understand how the research question was answered and to evaluate whether the process was correct.
 -   [ ] Limitations of the analysis are correctly noted with a suggestion for improvement for future studies.
 
 **Poster - Appearance**
--   [ ] The poster does not contain a burdensome amount of text that could have been replaced with the use of figures or tables.
--   [ ] Figures and tables chosen are clear and convey an intentional message with appropriate labels and captions.
--   [ ] The poster is logical and understandable without the need for additional or supplemental materials (i.e. can be understood without reading the full report).
+-   [X] The poster does not contain a burdensome amount of text that could have been replaced with the use of figures or tables.
+-   [X] Figures and tables chosen are clear and convey an intentional message with appropriate labels and captions.
+-   [X] The poster is logical and understandable without the need for additional or supplemental materials (i.e. can be understood without reading the full report).
 
 **Ethics Discussion**
 -   [X] Answer meets the minimum and maximum word count.
@@ -76,6 +76,6 @@ The repo is structured as:
 -   [X] Answer refers to some concepts and ideas found in the second ethics module.
 
 **Editing Demonstration**
--   [ ] The editing technique employed was stated and a reason for this choice was provided.
--   [ ] Both an original and an edited writing sample are provided, and notable improvements were made reflecting the editing focus stated.
--   [ ] A short reflection is provided discussing what went well and what was challenging in editing the writing sample.
+-   [X] The editing technique employed was stated and a reason for this choice was provided.
+-   [X] Both an original and an edited writing sample are provided, and notable improvements were made reflecting the editing focus stated.
+-   [X] A short reflection is provided discussing what went well and what was challenging in editing the writing sample.
