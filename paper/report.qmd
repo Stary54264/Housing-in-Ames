@@ -260,13 +260,22 @@ kable(summary_table,
 
 # Conclusion and Limitations
 
-This paper examined various models using multiple linear regression techniques to identify the best fit for the data, guided by several performance metrics including $R^2_{adj}$, $AIC$, $AIC_c$, $BIC$, and $VIF$. By building and comparing a series of models, we aimed to identify the model that most accurately captured the relationship between the predictor variables and the response variable, while avoiding overfitting.
+## Conclusion
+
+This study aimed to investigate the relationship between the predictors and the response variable using a series of linear models. The results is that all numerical predictors affects house prices. Based on the analysis of the final model, the linear relationship between the predictors and the response variable was confirmed, and the results support the hypothesis.
+
+The final model we choose is Model 2 (Model 3, 4, and 5). Its formula is listed below. The result could be interpreted in this way: "For a one-unit increase in `ln(lot_area)`, we expected `ln(sale_price)` to increase by 0.187". The findings are not surprising, and they align with the literatures.
+
+\begin{align}
+log(Y) = 8.57+0.187 \times log(X_1)+0.280 \times X_2^{0.8}+1.47 \times 10^{-113} \times X_3^{34}+ \\
+3.35 \times 10^{-3} \times X_4^{0.5}+0.0229 \times X_5^{0.33}+0.0348 \times X_6^{0.25}+(-1.03 \times 10^{-3}) \times X_7^{0.5}
+\end{align}
+
+## Limitation
 
 Despite the insights gained through this process, the study has several limitations. One significant limitation is the assumption of linearity inherent in multiple linear regression. This assumption may not hold in all cases, particularly when the true relationship between the variables is non-linear. In such cases, linear regression models may be less accurate, and alternative techniques such as non-linear regression or machine learning methods may be more appropriate. Additionally, the models evaluated in this paper were limited to a specific set of predictors and may not fully account for other potentially relevant variables. The inclusion of more variables, or the use of more complex models such as interaction terms, could improve the predictive power of the model.
 
 Another limitation is that in this study, we did not perform a train-test split, which means the models were evaluated on the entire dataset rather than being validated on unseen data. This approach prioritizes understanding the relationships between variables and the underlying structure of the data, rather than focusing on predictive accuracy. While this method provides valuable insights into the model's fit and the significance of various predictors, it does not allow for an assessment of how well the model would generalize to new, unseen data. As a result, the primary objective here was to explore and interpret the model, rather than make predictions.
-
-Finally, the reliance on statistical criteria such as AIC and BIC for model selection might be biased. While these metrics are widely used in model selection, they are not without criticism. AIC, for instance, does not penalize overfitting as strongly as BIC, which could lead to different model choices depending on the metric used. Moreover, both AIC and BIC assume that the errors are normally distributed, which may not always be the case in real-world data.
 
 \newpage
 
