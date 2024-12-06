@@ -267,8 +267,11 @@ This study aimed to investigate the relationship between the predictors and the 
 The final model we choose is Model 2 (Model 3, 4, and 5). Its formula is listed below. The result could be interpreted in this way: "For a one-unit increase in `ln(lot_area)`, we expected `ln(sale_price)` to increase by 0.187". The findings are not surprising, and they align with the literatures.
 
 \begin{align}
-log(Y) = 8.57+0.187 \times log(X_1)+0.280 \times X_2^{0.8}+1.47 \times 10^{-113} \times X_3^{34}+ \\
-3.35 \times 10^{-3} \times X_4^{0.5}+0.0229 \times X_5^{0.33}+0.0348 \times X_6^{0.25}+(-1.03 \times 10^{-3}) \times X_7^{0.5}+\epsilon
+\begin{split}
+ln(Y)=&8.57+0.187 \times ln(X_1)+0.280 \times X_2^{0.8}+\\
+&1.47 \times 10^{-113} \times X_3^{34}+3.35 \times 10^{-3} \times X_4^{0.5}+0.0229 \times X_5^{0.33}+\\
+&0.0348 \times X_6^{0.25}+(-1.03 \times 10^{-3}) \times X_7^{0.5}+\epsilon
+\end{split}
 \end{align}
 
 $Y$: `sale_price`
