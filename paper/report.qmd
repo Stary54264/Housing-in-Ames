@@ -421,7 +421,7 @@ res9 <- ggplot(data, aes(x = central_air, y = res)) +
 res8 + res9
 ```
 
-We can see some violations of constant variance in @fig-res-1, @fig-res-2, and @fig-res-3 for variables except `year_built`, so a transformation is needed for those variables.
+We can see some violations of constant variance in @fig-res-1, @fig-res-2, and @fig-res-3 for variables except `year_built`, since the spread of the points becomes wider with increasing $x$. So, a transformation is needed for them.
 
 ```{r, fig.pos="H", fig.height=6, fig.width=8}
 #| label: fig-qq-1
@@ -477,7 +477,7 @@ qqnorm(data$misc_val, main = "`misc_val`")
 qqline(data$misc_val, col = "red")
 ```
 
-Normality is not violated.
+We can see some violations of normality in @fig-qq-1 and @fig-qq-2 for variables except `total_bsmt_sf` and `garage_area`, since the points does not scattered along the diagonal. So, a transformation is needed for them.
 
 # Ethics Discussion
 
@@ -525,7 +525,7 @@ Group contribution is available at <https://github.com/Stary54264/Housing-in-Ame
 
 # R Packages and Dataset
 
-R [@r] was used to conduct this research. Packages used include `tidyverse` [@tidyverse], `knitr` [@knitr], `patchwork` [@patchwork], `car` [@car], `leaps` [@leaps], and `MASS` [@MASS]. the dataset used is @ameshousing from @ames.
+R [@r] was used to conduct this research. Packages used include `tidyverse` [@tidyverse], `knitr` [@knitr], `patchwork` [@patchwork], `car` [@car], `leaps` [@leaps], and `MASS` [@MASS]. the dataset used is Ames Housing dataset [@ameshousing] from @ames.
 
 \newpage
 
