@@ -60,8 +60,8 @@ model1 <- lm(sale_price ~
                misc_val, data = data)
 
 # Take out Fitted Values and Residuals
-fit1 <- fitted(model1)
-res1 <- resid(model1)
+fit <- fitted(model1)
+res <- resid(model1)
 ```
 
 After Model 1 is developed, it is essential to validate its reliability by checking two conditions (conditional mean response and conditional mean predictor) and four assumptions (linearity, uncorrelated errors, constant variances, and normality). Graphical tools like residual plots, and Q-Q plots are applied. This diagnostic step identifies potential issues that may compromise the model's interpretability or predictive accuracy, guiding subsequent corrections.
@@ -196,7 +196,7 @@ summary_table <- summary_table |>
   mutate(across(where(is.numeric), ~ round(., 2)))
 ```
 
-To refine Model 3, automated selection tools could also employed. The method we used is stepwise selection, which assess predictor subsets, streamlining the selection process. It enhance efficiency while maintaining rigor in identifying the most suitable predictors. Model 5, is the culmination of this process, balancing explanatory power and simplicity.
+To refine Model 2, automated selection tools could also employed. The method we used is stepwise selection, which assess predictor subsets, streamlining the selection process. It enhance efficiency while maintaining rigor in identifying the most suitable predictors. Model 5, is the culmination of this process, balancing explanatory power and simplicity.
 
 ```{r}
 #| include: false
@@ -246,7 +246,7 @@ kable(summary_table,
                     "AIC_c", "BIC", "VIF_{max}"))
 ```
 
-The results showed that Model F and Model G has similar $R^2_{adj}$. However, Model G has smaller $AIC$ and $AIC_c$, while Model F has smaller $BIC$. Since $BIC$ has severe penalty on more predictors, we choose Model G to be Model 4. Additionally, the $VIF$ values were all below the threshold of 5, suggesting that multicollinearity was not a concern in the chosen model. The all-subset regression approach led to a model that balanced complexity and predictive accuracy effectively. Since Model 4 is also a full model, it is the same model as Model 2.
+The results showed that Model F and Model G has similar $R^2_{adj}$. However, Model G has smaller $AIC$ and $AIC_c$, while Model F has smaller $BIC$. Since $BIC$ has severe penalty on more predictors, we choose Model G to be Model 4. Additionally, the maximum $VIF$ values were all below the threshold of 5, suggesting that multicollinearity was not a concern in the chosen model. The all-subset regression approach led to a model that balanced complexity and predictive accuracy effectively. Since Model 4 is also a full model, it is the same model as Model 2.
 
 ## Model 5
 
@@ -295,12 +295,14 @@ Another limitation is that in this study, we did not perform a train-test split,
 #| message: false
 
 # Plot responses against fitted values
-plot(x = fit1, y = data$sale_price,
+plot(x = fit, y = data$sale_price,
      xlab = "Fitted Values",
      ylab = "Responses")
 
 abline(a = 0, b = 1, lty = 2)
 ```
+
+We can see from @fig-fit-resp that the pionts scattered along the diagonal, so conditional mean predictor is fulfilled.
 
 ```{r, fig.pos="H"}
 #| label: fig-pair
@@ -317,118 +319,162 @@ data$roof_style <- as.factor(data$roof_style)
 pairs(data[, 2:9])
 ```
 
-We can see that both conditions are satisfied, so the residual plots would be valid.
+We cannot see any non-linear patterns in @fig-pair, so conditional mean response is fulfilled.
+
+Since both conditions are satisfied, we are confident that the result of the residual plots would be valid.
 
 ## Assumptions
 
-```{r, fig.pos="H"}
+```{r, fig.pos="H", fig.height=6, fig.width=8}
 #| label: fig-res-1
 #| fig-cap: Residuals vs. Observation - I
 #| echo: false
 #| warning: false
 #| message: false
 
-# Plot residuals against `lot_area`
-graph1 <- ggplot(data, aes(x = lot_area, y = res1)) +
+# Plot Residuals Against `lot_area`
+res1 <- ggplot(data, aes(x = lot_area, y = res)) +
   geom_point() +
   xlab("`lot_area`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Plot residuals against `overall_qual`
-graph2 <- ggplot(data, aes(x = overall_qual, y = res1)) +
+# Plot Residuals Against `overall_qual`
+res2 <- ggplot(data, aes(x = overall_qual, y = res)) +
   geom_point() +
   xlab("`overall_qual`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Plot residuals against `year_built`
-graph3 <- ggplot(data, aes(x = year_built, y = res1)) +
+# Plot Residuals Against `year_built`
+res3 <- ggplot(data, aes(x = year_built, y = res)) +
   geom_point() +
   xlab("`year_built`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Plot residuals against `mas_vnr_area`
-graph4 <- ggplot(data, aes(x = mas_vnr_area, y = res1)) +
+# Plot Residuals Against `mas_vnr_area`
+res4 <- ggplot(data, aes(x = mas_vnr_area, y = res)) +
   geom_point() +
   xlab("`mas_vnr_area`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Show 4 residual plots together
-graph1 + graph2 + graph3 + graph4
+# Show 4 Residual Plots Together
+res1 + res2 + res3 + res4
 ```
 
-```{r, fig.pos="H"}
+```{r, fig.pos="H", fig.height=6, fig.width=8}
 #| label: fig-res-2
 #| fig-cap: Residuals vs. Observation - II
 #| echo: false
 #| warning: false
 #| message: false
 
-# Plot residuals against `total_bsmt_sf`
-graph5 <- ggplot(data, aes(x = total_bsmt_sf, y = res1)) +
+# Plot Residuals Against `total_bsmt_sf`
+res5 <- ggplot(data, aes(x = total_bsmt_sf, y = res)) +
   geom_point() +
   xlab("`total_bsmt_sf`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Plot residuals against `garage_area`
-graph6 <- ggplot(data, aes(x = garage_area, y = res1)) +
+# Plot Residuals Against `garage_area`
+res6 <- ggplot(data, aes(x = garage_area, y = res)) +
   geom_point() +
   xlab("`garage_area`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Plot residuals against `misc_val`
-graph7 <- ggplot(data, aes(x = misc_val, y = res1)) +
+# Plot Residuals Against `misc_val`
+res7 <- ggplot(data, aes(x = misc_val, y = res)) +
   geom_point() +
   xlab("`misc_val`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Show 3 residual plots together
-graph5 + graph6 + graph7
+# Show 3 Residual Plots Together
+res5 + res6 + res7
 ```
 
-```{r, fig.pos="H"}
+```{r, fig.pos="H", fig.height=6, fig.width=8}
 #| label: fig-res-3
 #| fig-cap: Residuals vs. Observation - III
 #| echo: false
 #| warning: false
 #| message: false
 
-# Plot residuals against `roof_style`
-graph8 <- ggplot(data, aes(x = roof_style, y = res1)) +
+# Plot Residuals Against `roof_style`
+res8 <- ggplot(data, aes(x = roof_style, y = res)) +
   geom_boxplot() +
   xlab("`roof_style`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Plot residuals against `central_air`
-graph9 <- ggplot(data, aes(x = central_air, y = res1)) +
+# Plot Residuals Against `central_air`
+res9 <- ggplot(data, aes(x = central_air, y = res)) +
   geom_boxplot() +
   xlab("`central_air`") +
   ylab("Residuals") +
   theme_minimal()
 
-# Show 2 boxplots together
-graph8 + graph9
+# Show 2 Boxplots Together
+res8 + res9
 ```
 
-We can see some violations of linearity and constant variance in `lot_area`, `overall_qual`, `mas_vnr_area`, `total_bsmt_sf`, `garage_area`, and `misc_val`.
+We can see some violations of constant variance in @fig-res-1, @fig-res-2, and @fig-res-3 for variables except `year_built`, so a transformation is needed for those variables.
 
-```{r, fig.pos="H"}
-#| label: fig-qq
-#| fig-cap: Q-Q Plot
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-qq-1
+#| fig-cap: Q-Q Plot - I
 #| echo: false
 #| warning: false
 #| message: false
 
-# Plot the Q-Q plot
-qqnorm(res1)
-qqline(res1, col = "red")
+# Show 4 Q-Q Plots Together
+par(mfrow=c(2,2))
+
+# Plot the Q-Q Plot for `sale_price`
+qqnorm(data$sale_price, main = "`sale_price`")
+qqline(data$sale_price, col = "red")
+
+# Plot the Q-Q Plot for `lot_area`
+qqnorm(data$lot_area, main = "`lot_area`")
+qqline(data$lot_area, col = "red")
+
+# Plot the Q-Q Plot for `overall_qual`
+qqnorm(data$overall_qual, main = "`overall_qual`")
+qqline(data$overall_qual, col = "red")
+
+# Plot the Q-Q Plot for `year_built`
+qqnorm(data$year_built, main = "`year_built`")
+qqline(data$year_built, col = "red")
+```
+
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-qq-2
+#| fig-cap: Q-Q Plot - II
+#| echo: false
+#| warning: false
+#| message: false
+
+# Show 4 Q-Q Plots Together
+par(mfrow=c(2,2))
+
+# Plot the Q-Q Plot for `mas_vnr_area`
+qqnorm(data$mas_vnr_area, main = "`mas_vnr_area`")
+qqline(data$mas_vnr_area, col = "red")
+
+# Plot the Q-Q Plot for `total_bsmt_sf`
+qqnorm(data$total_bsmt_sf, main = "`total_bsmt_sf`")
+qqline(data$total_bsmt_sf, col = "red")
+
+# Plot the Q-Q Plot for `garage_area`
+qqnorm(data$garage_area, main = "`garage_area`")
+qqline(data$garage_area, col = "red")
+
+# Plot the Q-Q Plot for `misc_val`
+qqnorm(data$misc_val, main = "`misc_val`")
+qqline(data$misc_val, col = "red")
 ```
 
 Normality is not violated.
@@ -476,6 +522,10 @@ Group contribution is available at <https://github.com/Stary54264/Housing-in-Ame
 - Siyuan Lu: Set research question; searched and read peer-reviewed articles; introduced the project; checked data ethics; edited introduction.
 
 - Yi Tang: Designed the poster.
+
+# R Packages and Dataset
+
+R [@r] was used to conduct this research. Packages used include `tidyverse` [@tidyverse], `knitr` [@knitr], `patchwork` [@patchwork], `car` [@car], `leaps` [@leaps], and `MASS` [@MASS]. the dataset used is @ameshousing from @ames.
 
 \newpage
 
