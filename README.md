@@ -1,4 +1,4 @@
-# Housing in Ames
+# Analyzing Influencing Factors of House Prices in Ames by Linear Regression
 
 ## Overview
 
