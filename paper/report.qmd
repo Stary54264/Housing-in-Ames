@@ -1,5 +1,5 @@
 ---
-title: "Housing in Ames"
+title: "Analyzing Influencing Factors of House Prices in Ames by Linear Regression"
 author: "Yanzun Jiang, Siyuan Lu, Yi Tang"
 date: today
 date-format: long
@@ -27,13 +27,13 @@ library(MASS)
 
 # Introduction
 
-The research question we aim to answer is: what are the factors that influence house prices in Ames from 2006 to 2010? We would set up a linear regression model to answer this with house prices as the outcome (response). Factors that might affect the outcome (predictors) include area, quality, year of construction, facilities, etc.
+The research question we aim to answer is: what are the factors that influence house prices in Ames from 2006 to 2010? We would set up a linear regression model to answer the research question with house prices as response. Predictors include area, quality, year of construction, facilities, etc. Our research can offer practical recommendations for various stakeholders, contributing to a more efficient and transparent real estate market in Ames. Similar analysis can be done to other cities to improve economic insights and investment decisions.
 
-By setting up the model, we can identify the factors that influence house prices, since linear regression allows us to quantify the relationship between predictors and responses, making it easier to interpret the impact of each factor alone on house prices. Our primary goal is understanding the factors that influence historical house prices, so our focus would be on description rather than prediction.
+By setting up the model, we can identify the factors that influence house prices. Linear regression allows us to quantify the relationship between predictors and responses, making it easier to interpret the impact of each factor alone on house prices. Our primary goal is understanding the factors that influence historical house prices, so our focus would be on description rather than prediction.
 
-We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" concludes that housing prices are negatively correlated with completion costs, land acquisition prices, residents’ disposable income, and population density (@influencing). This article provides some characteristics other than what we use that can also influence house price in national scope.
+We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" concludes that housing prices are negatively correlated with completion costs, land acquisition prices, residents’ disposable income, and population density (@influencing). This article provides some alternative characteristics that also influence house price in national scope.
 
-In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
+In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the house prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between house size and price (@size). These two researches explain the non-linear relationship between house price and other factors, providing more insights into ways that factors might affect house prices.
 
 # Method
 
@@ -302,7 +302,7 @@ plot(x = fit, y = data$sale_price,
 abline(a = 0, b = 1, lty = 2)
 ```
 
-We can see from @fig-fit-resp that the pionts scattered along the diagonal, so conditional mean predictor is fulfilled.
+We can see from @fig-fit-resp that the points scattered along the diagonal, so conditional mean predictor is fulfilled.
 
 ```{r, fig.pos="H"}
 #| label: fig-pair
@@ -485,9 +485,7 @@ Our data is collected from Ames City Assessor's Office (@ames), then we cleaned 
 
 The Ames housing dataset has been used widely, especially in the context of academic projects and machine learning competitions. It is often considered a modern alternative to the Boston Housing dataset. The dataset is well-vetted and trusted by the data science community for its comprehensiveness and relevance.
 
-The use of automated selection tools in academic research brings both opportunities and ethical challenges. Automated tools can significantly speed up research processes, but their use must be transparent, including acknowledging the specific tools and algorithms employed, as well as their limitations.
-
-Ensuring fairness and avoiding skewed results require careful selection of training data and ongoing monitoring to detect and mitigate biases presented in AI training data. While automated tools can enhance productivity, they should not replace human judgment. By addressing these ethical considerations, we can leverage the benefits of automated selection tools while maintaining the integrity and fairness during our research practices.
+Automated selection method is efficient, consistent, and able to handle large-scale data. We choose automated selection method in Model 5 of our analysis to avoid subjective judgment and negligence. While automated tools can enhance productivity, they should not replace human judgment. By addressing these ethical considerations, we can leverage the benefits of automated selection tools while maintaining the integrity and fairness during our research practices.
 
 # Editing Demonstration
 
@@ -501,17 +499,24 @@ We found several peer-reviewed articles that focus on similar problems with this
 
 In "Dynamic Relationships Between Commodity Prices and Local Housing Market", this research examines the significant nonlinear relationship between agricultural commodity prices and the local housing market (@dynamic). The research "Non-Linear Relationships Between House Size and Price" clarifies the nonlinear relationships between housing size and price (@size). These two researches explain another aspect, a non-linear relationship, between house price and other factors, providing more comprehensive information about house market for decision making of the developers, home purchasers, real estate appraisers, and the governments.
 
-## Editted Version of Introduction
+## Edited Version of Introduction
 
-The research question we aim to answer is: what are the factors that influence house prices in Ames from 2006 to 2010? We would set up a linear regression model to answer this with house prices as the outcome (response). Factors that might affect the outcome (predictors) include area, quality, year of construction, facilities, etc.
+The research question we aim to answer is: what are the factors that influence house prices in Ames from 2006 to 2010? We would set up a linear regression model to answer the research question with house prices as response. Predictors include area, quality, year of construction, facilities, etc. Our research can offer practical recommendations for various stakeholders, contributing to a more efficient and transparent real estate market in Ames. Similar analysis can be done to other cities to improve economic insights and investment decisions.
 
-By setting up the model, we can identify the factors that influence house prices, since linear regression allows us to quantify the relationship between predictors and responses, making it easier to interpret the impact of each factor alone on house prices. Our primary goal is understanding the factors that influence historical house prices, so our focus would be on description rather than prediction.
+By setting up the model, we can identify the factors that influence house prices. Linear regression allows us to quantify the relationship between predictors and responses, making it easier to interpret the impact of each factor alone on house prices. Our primary goal is understanding the factors that influence historical house prices, so our focus would be on description rather than prediction.
 
-We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" concludes that housing prices are negatively correlated with completion costs, land acquisition prices, residents’ disposable income, and population density (@influencing). This article provides some characteristics other than what we use that can also influence house price in national scope.
+We found several peer-reviewed articles that focus on similar problems with this paper. "Influencing Factors Analysis of House Prices Based on Multiple Linear Regression" concludes that housing prices are negatively correlated with completion costs, land acquisition prices, residents’ disposable income, and population density (@influencing). This article provides some alternative characteristics that also influence house price in national scope.
 
-In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the housing prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between size and price (@size). These two researches explain the non-linear relationship, between house price and other factors, providing more insights into ways that factors might affect house prices.
+In "Dynamic Relationships Between Commodity Prices and Local Housing Market", the researchers examines the significant nonlinear relationship between agricultural commodity prices and the house prices (@dynamic). Another research, "Non-Linear Relationships Between House Size and Price", clarifies the non-linear relationship between house size and price (@size). These two researches explain the non-linear relationship between house price and other factors, providing more insights into ways that factors might affect house prices.
 
 ## Comments on the Process
+
+We choose to edit the introduction by simplicity. Our original introduction contains some clutters. We can improve the introduction clearer and shorter. 
+
+Original text: We will test whether there is a statistically significant linear relationship between certain property characteristics (predictors) and the sale price of houses (response) using linear regression.
+Edited text: By setting up the model, we can identify the factors that influence house prices. 
+
+It is easy to delete some complex sentences when read the introduction with the editing techniques. The challenge part is to break and modify sentences in clearer and fewer words. 
 
 # Contributions
 
