@@ -1,0 +1,359 @@
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(knitr)
+library(patchwork)
+library(car)
+library(leaps)
+library(MASS)
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Read Data
+data <- read_csv(here::here("data", "cleaned_data.csv"))
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Fit Model 1
+model1 <- lm(sale_price ~
+               lot_area + overall_qual + year_built + roof_style +
+               mas_vnr_area + total_bsmt_sf + central_air + garage_area +
+               misc_val, data = data)
+
+# Take out Fitted Values and Residuals
+fit <- fitted(model1)
+res <- resid(model1)
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Remove Categorical Predictors
+box_cox_data <- data |>
+  dplyr::select(-roof_style, -central_air, -mas_vnr_area, -misc_val) |>
+  filter_all(all_vars(. != 0))
+
+# Get Suitable Powers
+summary(powerTransform(cbind(box_cox_data[, 1:6])))
+
+# Do Box-Cox Transformation
+new_data <- data |>
+  dplyr::select(-roof_style, -central_air) |>
+  mutate(sale_price = log(sale_price),
+         lot_area = log(lot_area),
+         overall_qual = overall_qual ^ 0.8,
+         year_built = year_built ^ 34,
+         mas_vnr_area = sqrt(mas_vnr_area),
+         total_bsmt_sf = total_bsmt_sf ^ 0.33,
+         garage_area = garage_area ^ 0.25,
+         misc_val = sqrt(misc_val))
+
+# Fit Model 2
+model2 <- lm(sale_price ~
+               lot_area + overall_qual + year_built + mas_vnr_area +
+               total_bsmt_sf + garage_area + misc_val, data = new_data)
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Show Hypothesis Testing Result
+summary(model2)
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Do All-Subsets Selection
+summary(regsubsets(sale_price ~ lot_area + overall_qual + year_built +
+                     mas_vnr_area + total_bsmt_sf + garage_area + misc_val,
+                   data = new_data, nbest = 1, nvmax = 7))
+
+# Build the Models
+model_A <- lm(sale_price ~ overall_qual, data = new_data)
+model_B <- lm(sale_price ~ overall_qual + lot_area, data = new_data)
+model_C <- lm(sale_price ~ overall_qual + lot_area + year_built,
+              data = new_data)
+model_D <- lm(sale_price ~ overall_qual + lot_area + year_built +
+                total_bsmt_sf, data = new_data)
+model_E <- lm(sale_price ~ overall_qual + lot_area + year_built +
+                total_bsmt_sf + garage_area, data = new_data)
+model_F <- lm(sale_price ~ overall_qual + lot_area + year_built +
+                total_bsmt_sf + garage_area + mas_vnr_area, data = new_data)
+
+# Get n and p
+n <- nrow(new_data)
+p_A <- length(coef(model_A)) - 1
+p_B <- length(coef(model_B)) - 1
+p_C <- length(coef(model_C)) - 1
+p_D <- length(coef(model_D)) - 1
+p_E <- length(coef(model_E)) - 1
+p_F <- length(coef(model_F)) - 1
+p2 <- length(coef(model2)) - 1
+
+# Summarize the Criteria
+summary_table <- 
+  data.frame(Model = c("Model A", "Model B", "Model C", "Model D",
+                       "Model E", "Model F","Model G"),
+             R2 = c(summary(model_A)$adj.r.squared,
+                    summary(model_B)$adj.r.squared,
+                    summary(model_C)$adj.r.squared,
+                    summary(model_D)$adj.r.squared,
+                    summary(model_E)$adj.r.squared,
+                    summary(model_F)$adj.r.squared,
+                    summary(model2)$adj.r.squared),
+             AIC = c(extractAIC(model_A, k = 2)[2],
+                     extractAIC(model_B, k = 2)[2],
+                     extractAIC(model_C, k = 2)[2],
+                     extractAIC(model_D, k = 2)[2],
+                     extractAIC(model_E, k = 2)[2],
+                     extractAIC(model_F, k = 2)[2],
+                     extractAIC(model2, k = 2)[2]),
+             AIC_c = c(extractAIC(model_A, k = 2)[2] +
+                         2 * (p_A + 2) * (p_A + 3) / (n - p_A - 1),
+                       extractAIC(model_B, k = 2)[2] +
+                         2 * (p_B + 2) * (p_B + 3) / (n - p_B - 1),
+                       extractAIC(model_C, k = 2)[2] +
+                         2 * (p_C + 2) * (p_C + 3) / (n - p_C - 1),
+                       extractAIC(model_D, k = 2)[2] +
+                         2 * (p_D + 2) * (p_D + 3) / (n - p_D - 1),
+                       extractAIC(model_E, k = 2)[2] +
+                         2 * (p_E + 2) * (p_E + 3) / (n - p_E - 1),
+                       extractAIC(model_F, k = 2)[2] +
+                         2 * (p_F + 2) * (p_F + 3) / (n - p_F - 1),
+                       extractAIC(model2, k = 2)[2] +
+                         2 * (p2 + 2) * (p2 + 3) / (n - p2 - 1)),
+             BIC = c(extractAIC(model_A, k = log(n))[2],
+                     extractAIC(model_B, k = log(n))[2],
+                     extractAIC(model_C, k = log(n))[2],
+                     extractAIC(model_D, k = log(n))[2],
+                     extractAIC(model_E, k = log(n))[2],
+                     extractAIC(model_F, k = log(n))[2],
+                     extractAIC(model2, k = log(n))[2]),
+             VIF = c(0, max(vif(model_B)), max(vif(model_C)),
+                     max(vif(model_D)), max(vif(model_E)),
+                     max(vif(model_F)), max(vif(model2))))
+
+# Round the Values
+summary_table <- summary_table |>
+  mutate(across(where(is.numeric), ~ round(., 2)))
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# Do Stepwise Selection
+stepAIC(lm(sale_price ~ ., data = new_data, direction = "both", k = 2))
+```
+
+```{r, fig.pos="H"}
+#| label: tbl-subset
+#| tbl-cap: Criteria for Model of Each Size
+#| echo: false
+#| warning: false
+#| message: false
+
+# Show the Table
+kable(summary_table,
+      col.names = c("Model", "R^2_{adj}", "AIC",
+                    "AIC_c", "BIC", "VIF_{max}"))
+```
+
+```{r, fig.pos="H"}
+#| label: fig-fit-resp
+#| fig-cap: Responses vs. Fitted Values
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot responses against fitted values
+plot(x = fit, y = data$sale_price,
+     xlab = "Fitted Values",
+     ylab = "Responses")
+
+abline(a = 0, b = 1, lty = 2)
+```
+
+```{r, fig.pos="H"}
+#| label: fig-pair
+#| fig-cap: Pairwise Scatterplots of Predictors
+#| echo: false
+#| warning: false
+#| message: false
+
+# Convert variables to factors
+data$central_air <- as.factor(data$central_air)
+data$roof_style <- as.factor(data$roof_style)
+
+# Plot predictors against each other
+pairs(data[, 2:9])
+```
+
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-res-1
+#| fig-cap: Residuals vs. Observation - I
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot Residuals Against `lot_area`
+res1 <- ggplot(data, aes(x = lot_area, y = res)) +
+  geom_point() +
+  xlab("`lot_area`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot Residuals Against `overall_qual`
+res2 <- ggplot(data, aes(x = overall_qual, y = res)) +
+  geom_point() +
+  xlab("`overall_qual`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot Residuals Against `year_built`
+res3 <- ggplot(data, aes(x = year_built, y = res)) +
+  geom_point() +
+  xlab("`year_built`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot Residuals Against `mas_vnr_area`
+res4 <- ggplot(data, aes(x = mas_vnr_area, y = res)) +
+  geom_point() +
+  xlab("`mas_vnr_area`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 4 Residual Plots Together
+res1 + res2 + res3 + res4
+```
+
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-res-2
+#| fig-cap: Residuals vs. Observation - II
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot Residuals Against `total_bsmt_sf`
+res5 <- ggplot(data, aes(x = total_bsmt_sf, y = res)) +
+  geom_point() +
+  xlab("`total_bsmt_sf`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot Residuals Against `garage_area`
+res6 <- ggplot(data, aes(x = garage_area, y = res)) +
+  geom_point() +
+  xlab("`garage_area`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot Residuals Against `misc_val`
+res7 <- ggplot(data, aes(x = misc_val, y = res)) +
+  geom_point() +
+  xlab("`misc_val`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 3 Residual Plots Together
+res5 + res6 + res7
+```
+
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-res-3
+#| fig-cap: Residuals vs. Observation - III
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot Residuals Against `roof_style`
+res8 <- ggplot(data, aes(x = roof_style, y = res)) +
+  geom_boxplot() +
+  xlab("`roof_style`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Plot Residuals Against `central_air`
+res9 <- ggplot(data, aes(x = central_air, y = res)) +
+  geom_boxplot() +
+  xlab("`central_air`") +
+  ylab("Residuals") +
+  theme_minimal()
+
+# Show 2 Boxplots Together
+res8 + res9
+```
+
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-qq-1
+#| fig-cap: Q-Q Plot - I
+#| echo: false
+#| warning: false
+#| message: false
+
+# Show 4 Q-Q Plots Together
+par(mfrow=c(2,2))
+
+# Plot the Q-Q Plot for `sale_price`
+qqnorm(data$sale_price, main = "`sale_price`")
+qqline(data$sale_price, col = "red")
+
+# Plot the Q-Q Plot for `lot_area`
+qqnorm(data$lot_area, main = "`lot_area`")
+qqline(data$lot_area, col = "red")
+
+# Plot the Q-Q Plot for `overall_qual`
+qqnorm(data$overall_qual, main = "`overall_qual`")
+qqline(data$overall_qual, col = "red")
+
+# Plot the Q-Q Plot for `year_built`
+qqnorm(data$year_built, main = "`year_built`")
+qqline(data$year_built, col = "red")
+```
+
+```{r, fig.pos="H", fig.height=6, fig.width=8}
+#| label: fig-qq-2
+#| fig-cap: Q-Q Plot - II
+#| echo: false
+#| warning: false
+#| message: false
+
+# Show 4 Q-Q Plots Together
+par(mfrow=c(2,2))
+
+# Plot the Q-Q Plot for `mas_vnr_area`
+qqnorm(data$mas_vnr_area, main = "`mas_vnr_area`")
+qqline(data$mas_vnr_area, col = "red")
+
+# Plot the Q-Q Plot for `total_bsmt_sf`
+qqnorm(data$total_bsmt_sf, main = "`total_bsmt_sf`")
+qqline(data$total_bsmt_sf, col = "red")
+
+# Plot the Q-Q Plot for `garage_area`
+qqnorm(data$garage_area, main = "`garage_area`")
+qqline(data$garage_area, col = "red")
+
+# Plot the Q-Q Plot for `misc_val`
+qqnorm(data$misc_val, main = "`misc_val`")
+qqline(data$misc_val, col = "red")
+```
